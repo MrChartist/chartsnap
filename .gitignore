@@ -1,0 +1,28 @@
+node_modules/
+.npm/
+npm-debug.log*
+yarn-error.log
+
+# Chart profile dirs created by Chrome launcher
+.chrome-profiles/
+.chrome-profile/
+
+# Saved chart images (keep folder, ignore contents)
+storage/*
+!storage/.gitkeep
+
+# Environment / secrets
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/

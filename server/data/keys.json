@@ -1,0 +1,32 @@
+{
+  "demo-key-basic-001": {
+    "email": "demo@chartsnap.dev",
+    "tier": "BASIC",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "active": true
+  },
+  "demo-key-pro-001": {
+    "email": "pro@chartsnap.dev",
+    "tier": "PRO",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "active": true
+  },
+  "demo-key-ultra-001": {
+    "email": "ultra@chartsnap.dev",
+    "tier": "ULTRA",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "active": true
+  },
+  "cs-5f9dc682-88a0-4d22-9725-66b69895c030": {
+    "email": "testuser@chartsnap.dev",
+    "tier": "BASIC",
+    "createdAt": "2026-03-05T06:48:30.211Z",
+    "active": true
+  },
+  "cs-4c582de9-03d7-4c7b-a518-d73cc603ebfb": {
+    "email": "test@example.com",
+    "tier": "BASIC",
+    "createdAt": "2026-03-05T07:36:53.061Z",
+    "active": true
+  }
+}
