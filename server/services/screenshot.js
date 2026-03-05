@@ -7,14 +7,43 @@
 const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
 const axios = require('axios');
 const path = require('path');
-const puppeteer = require('puppeteer');
+const os = require('os');
+const fs = require('fs');
+
+// Use puppeteer's own bundled chrome-headless-shell (no crashpad, no ~/Library dependency)
+// This is the ONLY binary that works inside restricted OS sandboxes on macOS
+let _executablePath = null;
+function getHeadlessShellPath() {
+    if (_executablePath) return _executablePath;
+    try {
+        _executablePath = puppeteer.executablePath('chrome-headless-shell');
+    } catch (_) {
+        // Fallback: search PUPPETEER_CACHE_DIR
+        const { execSync } = require('child_process');
+        const cache = process.env.PUPPETEER_CACHE_DIR || path.join(os.homedir(), '.cache', 'puppeteer');
+        const result = execSync(`find "${cache}/chrome-headless-shell" -name "chrome-headless-shell" -type f 2>/dev/null | head -1`).toString().trim();
+        _executablePath = result || null;
+    }
+    if (!_executablePath) throw new Error('chrome-headless-shell not found. Run: npx puppeteer browsers install chrome-headless-shell');
+    return _executablePath;
+}
 
 let _browser = null;
 async function getBrowser() {
     if (!_browser) {
+        const userDataDir = path.join(os.tmpdir(), 'chartsnap-chrome-data');
+        fs.mkdirSync(userDataDir, { recursive: true });
         _browser = await puppeteer.launch({
-            headless: "new",
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process', '--no-zygote']
+            headless: 'shell',
+            executablePath: getHeadlessShellPath(),
+            userDataDir,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--no-zygote',
+                '--disable-gpu',
+            ]
         });
     }
     return _browser;
