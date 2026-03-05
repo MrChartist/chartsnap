@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart Builder — ChartSnap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+        :root {
+            --cb-bg: #0d1117;
+            --cb-card: #161b22;
+            --cb-border: rgba(255, 255, 255, 0.08);
+            --cb-hover: rgba(255, 255, 255, 0.05);
+            --cb-accent: #7b61ff;
+            --cb-accent2: #06b6d4;
+            --cb-green: #26a69a;
+            --cb-red: #ef5350;
+            --cb-text: #e2e8f0;
+            --cb-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--cb-bg);
+            color: var(--cb-text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        .builder-wrap {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 64px);
+            margin-top: 64px;
+        }
+
+        /* ── Left Panel: Controls ── */
+        .builder-controls {
+            background: var(--cb-card);
+            border-right: 1px solid var(--cb-border);
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .builder-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .builder-header h1 {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, #7b61ff, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .builder-header .badge {
+            font-size: 10px;
+            background: rgba(123, 97, 255, 0.2);
+            color: #7b61ff;
+            border: 1px solid rgba(123, 97, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            -webkit-text-fill-color: #7b61ff;
+        }
+
+        .ctrl-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ctrl-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--cb-muted);
+        }
+
+        /* Symbol input + presets */
+        .symbol-input-wrap {
+            position: relative;
+        }
+
+        .symbol-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--cb-border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--cb-text);
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .symbol-input:focus {
+            border-color: var(--cb-accent);
+        }
+
+        .preset-group {
+            margin-top: 4px;
+        }
+
+        .preset-group-title {
+            font-size: 10px;
+            color: var(--cb-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preset-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .preset-pill {
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid var(--cb-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--cb-muted);
+            transition: all .15s;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .preset-pill:hover {
+            border-color: var(--cb-accent);
+            color: var(--cb-accent);
+            background: rgba(123, 97, 255, 0.08);
+        }
+
+        .preset-pill.indian {
+            border-color: rgba(255, 153, 0, 0.3);
+            color: #ff9900;
+            background: rgba(255, 153, 0, 0.06);
+        }
+
+        .preset-pill.indian:hover {
+            border-color: #ff9900;
+            background: rgba(255, 153, 0, 0.12);
+        }
+
+        .preset-pill.crypto {
+            border-color: rgba(247, 147, 26, 0.3);
+            color: #f7931a;
+            background: rgba(247, 147, 26, 0.06);
+        }
+
+        .preset-pill.crypto:hover {
+            border-color: #f7931a;
+            background: rgba(247, 147, 26, 0.12);
+        }
+
+        /* Interval buttons */
+        .interval-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+        }
+
+        .interval-btn {
+            padding: 7px 4px;
+            border-radius: 7px;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid var(--cb-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--cb-muted);
+            font-size: 12px;
+            font-weight: 600;
+            transition: all .15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .interval-btn:hover {
+            border-color: var(--cb-accent);
+            color: var(--cb-text);
+        }
+
+        .interval-btn.active {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: var(--cb-accent);
+            color: var(--cb-accent);
+        }
+
+        /* Chart style cards */
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .style-card {
+            border: 1px solid var(--cb-border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            padding: 10px 6px;
+            text-align: center;
+            transition: all .15s;
+        }
+
+        .style-card:hover {
+            border-color: var(--cb-accent);
+            background: rgba(123, 97, 255, 0.05);
+        }
+
+        .style-card.active {
+            border-color: var(--cb-accent);
+            background: rgba(123, 97, 255, 0.12);
+        }
+
+        .style-card .style-icon {
+            font-size: 22px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .style-card .style-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--cb-muted);
+        }
+
+        .style-card.active .style-name {
+            color: var(--cb-accent);
+        }
+
+        /* Indicator pills */
+        .indicator-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .ind-toggle {
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid var(--cb-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--cb-muted);
+            font-size: 12px;
+            font-weight: 600;
+            transition: all .2s;
+            user-select: none;
+        }
+
+        .ind-toggle:hover {
+            border-color: rgba(123, 97, 255, 0.5);
+            color: var(--cb-text);
+        }
+
+        .ind-toggle.active {
+            background: rgba(123, 97, 255, 0.18);
+            border-color: var(--cb-accent);
+            color: #c4b5fd;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid var(--cb-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--cb-muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: all .15s;
+        }
+
+        .theme-btn.active {
+            border-color: var(--cb-accent);
+            background: rgba(123, 97, 255, 0.12);
+            color: var(--cb-accent);
+        }
+
+        /* Size picker */
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .size-btn {
+            padding: 7px 4px;
+            border-radius: 7px;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid var(--cb-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--cb-muted);
+            font-size: 11px;
+            font-weight: 600;
+            transition: all .15s;
+        }
+
+        .size-btn.active {
+            border-color: var(--cb-accent);
+            background: rgba(123, 97, 255, 0.12);
+            color: var(--cb-accent);
+        }
+
+        /* Key input */
+        .key-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--cb-border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            color: var(--cb-text);
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .key-input:focus {
+            border-color: var(--cb-accent);
+        }
+
+        /* Generate button */
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #7b61ff 0%, #06b6d4 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity .2s, transform .1s;
+            letter-spacing: 0.3px;
+        }
+
+        .generate-btn:hover {
+            opacity: 0.9;
+        }
+
+        .generate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.45;
+            cursor: wait;
+        }
+
+        /* ── Right Panel: Preview ── */
+        .builder-preview {
+            background: #0a0e14;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 16px;
+        }
+
+        .preview-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cb-muted);
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all .2s;
+            border: 1px solid;
+        }
+
+        .btn-download {
+            background: rgba(38, 166, 154, 0.15);
+            border-color: rgba(38, 166, 154, 0.4);
+            color: #26a69a;
+        }
+
+        .btn-download:hover {
+            background: rgba(38, 166, 154, 0.25);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .btn-copy-url {
+            background: rgba(123, 97, 255, 0.1);
+            border-color: rgba(123, 97, 255, 0.3);
+            color: #7b61ff;
+        }
+
+        .btn-copy-url:hover {
+            background: rgba(123, 97, 255, 0.2);
+        }
+
+        .btn-save {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: rgba(6, 182, 212, 0.3);
+            color: #06b6d4;
+        }
+
+        .btn-save:hover {
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .btn-save:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        /* Preview canvas */
+        .preview-canvas {
+            flex: 1;
+            border-radius: 14px;
+            border: 1px solid var(--cb-border);
+            background: #0e1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .preview-canvas img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--cb-muted);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .preview-placeholder .big-icon {
+            font-size: 56px;
+            opacity: 0.3;
+        }
+
+        .preview-placeholder h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .preview-placeholder p {
+            font-size: 13px;
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .preview-loading {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 14, 20, 0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preview-loading.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(123, 97, 255, 0.2);
+            border-top-color: var(--cb-accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* URL display */
+        .url-bar {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--cb-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 11.5px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cb-muted);
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .url-bar .method {
+            color: #22c55e;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .url-bar .param-key {
+            color: #7b61ff;
+        }
+
+        .url-bar .param-val {
+            color: #06b6d4;
+        }
+
+        /* Recent charts */
+        .recent-section {
+            margin-top: 4px;
+        }
+
+        .recent-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--cb-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+        }
+
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .recent-card {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--cb-border);
+            cursor: pointer;
+            transition: border-color .2s;
+            position: relative;
+            aspect-ratio: 4/3;
+            background: var(--cb-card);
+        }
+
+        .recent-card:hover {
+            border-color: var(--cb-accent);
+        }
+
+        .recent-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .recent-card .recent-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            font-size: 9px;
+            padding: 3px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        /* Divider */
+        .ctrl-divider {
+            border: none;
+            border-top: 1px solid var(--cb-border);
+            margin: 0;
+        }
+
+        /* Status bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--cb-muted);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cb-green);
+        }
+
+        .status-dot.loading {
+            background: #fbbf24;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="navbar-brand" href="/">
+            <div class="navbar-logo">C</div>
+            <span class="navbar-name">Chart<span>Snap</span></span>
+        </a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/docs.html">API Docs</a>
+            <a class="nav-link active" href="/chart-builder.html">Chart Builder</a>
+            <a class="nav-link" href="/dashboard.html">Dashboard</a>
+        </div>
+        <div class="navbar-actions">
+            <button class="btn btn-primary btn-sm"
+                onclick="document.getElementById('register-modal').classList.add('open')">Get API Key →</button>
+        </div>
+    </nav>
+
+    <div class="builder-wrap">
+
+        <!-- ── LEFT: Controls ── -->
+        <div class="builder-controls">
+            <div class="builder-header">
+                <h1>⚡ Chart Builder</h1>
+                <span class="badge">LIVE</span>
+            </div>
+
+            <!-- Symbol -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">Symbol</div>
+                <div class="symbol-input-wrap">
+                    <input class="symbol-input" id="cb-symbol" value="BINANCE:BTCUSDT" placeholder="e.g. NSE:RELIANCE">
+                </div>
+                <div class="preset-group">
+                    <div class="preset-group-title">🇮🇳 Indian Markets</div>
+                    <div class="preset-pills">
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:NIFTY')">NIFTY</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:BANKNIFTY')">BANKNIFTY</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:RELIANCE')">RELIANCE</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:TCS')">TCS</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:INFY')">INFY</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:HDFCBANK')">HDFCBANK</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:WIPRO')">WIPRO</span>
+                        <span class="preset-pill indian" onclick="setSymbol('NSE:TATAMOTORS')">TATAMOTORS</span>
+                    </div>
+                </div>
+                <div class="preset-group">
+                    <div class="preset-group-title">₿ Crypto</div>
+                    <div class="preset-pills">
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:BTCUSDT')">BTC</span>
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:ETHUSDT')">ETH</span>
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:SOLUSDT')">SOL</span>
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:BNBUSDT')">BNB</span>
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:XRPUSDT')">XRP</span>
+                        <span class="preset-pill crypto" onclick="setSymbol('BINANCE:ADAUSDT')">ADA</span>
+                    </div>
+                </div>
+                <div class="preset-group">
+                    <div class="preset-group-title">🌍 Global Stocks</div>
+                    <div class="preset-pills">
+                        <span class="preset-pill" onclick="setSymbol('NASDAQ:AAPL')">AAPL</span>
+                        <span class="preset-pill" onclick="setSymbol('NASDAQ:TSLA')">TSLA</span>
+                        <span class="preset-pill" onclick="setSymbol('NASDAQ:MSFT')">MSFT</span>
+                        <span class="preset-pill" onclick="setSymbol('NASDAQ:NVDA')">NVDA</span>
+                        <span class="preset-pill" onclick="setSymbol('NYSE:META')">META</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="ctrl-divider">
+
+            <!-- Interval -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">Timeframe</div>
+                <div class="interval-grid">
+                    <div class="interval-btn" data-val="1m">1m</div>
+                    <div class="interval-btn" data-val="5m">5m</div>
+                    <div class="interval-btn" data-val="15m">15m</div>
+                    <div class="interval-btn" data-val="30m">30m</div>
+                    <div class="interval-btn" data-val="1h">1h</div>
+                    <div class="interval-btn" data-val="4h">4h</div>
+                    <div class="interval-btn" data-val="1D" class="active">1D</div>
+                    <div class="interval-btn" data-val="1W">1W</div>
+                    <div class="interval-btn" data-val="1M">1M</div>
+                </div>
+            </div>
+
+            <hr class="ctrl-divider">
+
+            <!-- Chart Style -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">Chart Style</div>
+                <div class="style-grid">
+                    <div class="style-card active" data-style="candle">
+                        <div class="style-icon">🕯️</div>
+                        <div class="style-name">Candle</div>
+                    </div>
+                    <div class="style-card" data-style="heikinAshi">
+                        <div class="style-icon">🎌</div>
+                        <div class="style-name">H. Ashi</div>
+                    </div>
+                    <div class="style-card" data-style="area">
+                        <div class="style-icon">🏔️</div>
+                        <div class="style-name">Area</div>
+                    </div>
+                    <div class="style-card" data-style="line">
+                        <div class="style-icon">📈</div>
+                        <div class="style-name">Line</div>
+                    </div>
+                    <div class="style-card" data-style="bar">
+                        <div class="style-icon">📊</div>
+                        <div class="style-name">Bar</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="ctrl-divider">
+
+            <!-- Indicators -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">Indicators</div>
+                <div class="indicator-grid">
+                    <div class="ind-toggle" data-study="Relative Strength Index">RSI</div>
+                    <div class="ind-toggle" data-study="MACD">MACD</div>
+                    <div class="ind-toggle" data-study="Bollinger Bands">Bollinger Bands</div>
+                    <div class="ind-toggle" data-study="Moving Average">SMA</div>
+                    <div class="ind-toggle" data-study="Moving Average Exponential">EMA</div>
+                    <div class="ind-toggle" data-study="Volume">Volume</div>
+                </div>
+            </div>
+
+            <hr class="ctrl-divider">
+
+            <!-- Theme + Size -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">Theme</div>
+                <div class="theme-toggle">
+                    <div class="theme-btn active" data-theme="dark">🌙 Dark</div>
+                    <div class="theme-btn" data-theme="light">☀️ Light</div>
+                </div>
+            </div>
+
+            <div class="ctrl-section">
+                <div class="ctrl-label">Output Size</div>
+                <div class="size-grid">
+                    <div class="size-btn active" data-w="800" data-h="600">800×600</div>
+                    <div class="size-btn" data-w="1024" data-h="640">1024×640</div>
+                    <div class="size-btn" data-w="1280" data-h="720">1280×720</div>
+                    <div class="size-btn" data-w="900" data-h="500">900×500</div>
+                    <div class="size-btn" data-w="1920" data-h="1080">1920×1080</div>
+                    <div class="size-btn" data-w="600" data-h="400">600×400</div>
+                </div>
+            </div>
+
+            <hr class="ctrl-divider">
+
+            <!-- API Key -->
+            <div class="ctrl-section">
+                <div class="ctrl-label">API Key</div>
+                <input class="key-input" id="cb-key" type="text" placeholder="Your API key..." value="demo-key-pro-001">
+            </div>
+
+            <button class="generate-btn" id="cb-generate" onclick="generateChart()">
+                ▶ Generate Chart
+            </button>
+        </div>
+
+        <!-- ── RIGHT: Preview ── -->
+        <div class="builder-preview">
+            <div class="preview-toolbar">
+                <div>
+                    <div class="preview-title" id="preview-title">Configure your chart and click Generate</div>
+                    <div class="status-bar" id="status-bar" style="margin-top:4px">
+                        <div class="status-dot" id="status-dot"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+                <div class="preview-actions">
+                    <button class="action-btn btn-download" id="btn-download" disabled onclick="downloadChart()">
+                        ⬇ Download PNG
+                    </button>
+                    <button class="action-btn btn-copy-url" onclick="copyUrl()">
+                        🔗 Copy URL
+                    </button>
+                    <button class="action-btn btn-save" id="btn-save" disabled onclick="saveToStorage()">
+                        💾 Save to Cloud
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chart preview -->
+            <div class="preview-canvas" id="preview-canvas">
+                <div class="preview-placeholder" id="preview-placeholder">
+                    <div class="big-icon">📊</div>
+                    <h3>Your chart will appear here</h3>
+                    <p>Select a symbol, choose your indicators, and click<br><strong>Generate Chart</strong></p>
+                </div>
+                <div class="preview-loading" id="preview-loading">
+                    <div class="spinner"></div>
+                    <span style="font-size:13px;color:#64748b">Fetching real market data...</span>
+                </div>
+                <img id="chart-img" style="display:none" alt="Generated chart">
+            </div>
+
+            <!-- URL bar -->
+            <div class="url-bar" id="url-bar">
+                <span class="method">GET</span><span style="color:#4a5568">Configure your chart above to see the
+                    generated API URL</span>
+            </div>
+
+            <!-- Recent charts -->
+            <div class="recent-section" id="recent-section" style="display:none">
+                <div class="recent-title">📁 Recent Charts</div>
+                <div class="recent-grid" id="recent-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-bg" id="register-modal" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal">
+            <button class="modal-close"
+                onclick="document.getElementById('register-modal').classList.remove('open')">×</button>
+            <h2>Get your free API key</h2>
+            <p>Start with 50 requests/day for free.</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input class="form-input" type="email" id="reg-email" placeholder="you@example.com" />
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doRegister()">Generate
+                Key →</button>
+            <div class="modal-result" id="reg-result">
+                <h4>🎉 Your API Key</h4>
+                <code id="reg-key-display"></code>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── State ──
+        let state = {
+            symbol: 'BINANCE:BTCUSDT',
+            interval: '1D',
+            style: 'candle',
+            theme: 'dark',
+            indicators: [],
+            width: 800,
+            height: 600,
+            key: 'demo-key-pro-001',
+        };
+        let currentBlob = null;
+        let currentUrl = '';
+        const history = JSON.parse(localStorage.getItem('chartsnap_history') || '[]');
+
+        // ── Init ──
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore saved key
+            const savedKey = localStorage.getItem('chartsnap_key');
+            if (savedKey) { document.getElementById('cb-key').value = savedKey; state.key = savedKey; }
+
+            // Interval buttons
+            document.querySelectorAll('.interval-btn').forEach(btn => {
+                if (btn.dataset.val === state.interval) btn.classList.add('active');
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.interval-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.interval = btn.dataset.val;
+                    updateUrlBar();
+                });
+            });
+
+            // Style cards
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    state.style = card.dataset.style;
+                    updateUrlBar();
+                });
+            });
+
+            // Indicator toggles
+            document.querySelectorAll('.ind-toggle').forEach(t => {
+                t.addEventListener('click', () => {
+                    t.classList.toggle('active');
+                    state.indicators = [...document.querySelectorAll('.ind-toggle.active')].map(x => x.dataset.study);
+                    updateUrlBar();
+                });
+            });
+
+            // Theme
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.theme = btn.dataset.theme;
+                    updateUrlBar();
+                });
+            });
+
+            // Size
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.width = parseInt(btn.dataset.w);
+                    state.height = parseInt(btn.dataset.h);
+                    updateUrlBar();
+                });
+            });
+
+            // Symbol input
+            document.getElementById('cb-symbol').addEventListener('input', e => {
+                state.symbol = e.target.value.trim().toUpperCase();
+                updateUrlBar();
+            });
+
+            // Key input
+            document.getElementById('cb-key').addEventListener('input', e => {
+                state.key = e.target.value.trim();
+                localStorage.setItem('chartsnap_key', state.key);
+            });
+
+            updateUrlBar();
+            renderHistory();
+        });
+
+        function setSymbol(symbol) {
+            state.symbol = symbol;
+            document.getElementById('cb-symbol').value = symbol;
+            updateUrlBar();
+        }
+
+        function buildUrl() {
+            const params = new URLSearchParams({
+                symbol: state.symbol,
+                interval: state.interval,
+                style: state.style,
+                theme: state.theme,
+                width: state.width,
+                height: state.height,
+                key: state.key,
+            });
+            state.indicators.forEach(ind => params.append('studies', ind));
+            return `/v1/tradingview/advanced-chart?${params.toString()}`;
+        }
+
+        function updateUrlBar() {
+            currentUrl = buildUrl();
+            const bar = document.getElementById('url-bar');
+            bar.innerHTML = `<span class="method">GET</span>${currentUrl
+                .replace(/([?&])(\w+)=/g, (m, sep, k) => `${sep}<span class="param-key">${k}</span>=`)
+                .replace(/=([^&]+)/g, (m, v) => `=<span class="param-val">${v}</span>`)}`;
+        }
+
+        async function generateChart() {
+            const btn = document.getElementById('cb-generate');
+            const loading = document.getElementById('preview-loading');
+            const placeholder = document.getElementById('preview-placeholder');
+            const img = document.getElementById('chart-img');
+            const dot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const titleEl = document.getElementById('preview-title');
+
+            btn.disabled = true; btn.textContent = '⏳ Generating...';
+            loading.classList.add('show');
+            dot.classList.add('loading');
+            statusText.textContent = 'Fetching market data...';
+            placeholder.style.display = 'none';
+
+            state.symbol = document.getElementById('cb-symbol').value.trim().toUpperCase() || state.symbol;
+            state.key = document.getElementById('cb-key').value.trim();
+            currentUrl = buildUrl();
+            updateUrlBar();
+
+            try {
+                const res = await fetch(currentUrl);
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+                    throw new Error(err.message || 'Generation failed');
+                }
+                currentBlob = await res.blob();
+                const objectUrl = URL.createObjectURL(currentBlob);
+
+                img.src = objectUrl;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+
+                titleEl.textContent = `${state.symbol} · ${state.interval} · ${state.style}`;
+                dot.classList.remove('loading');
+                statusText.textContent = `✓ ${(currentBlob.size / 1024).toFixed(0)}KB PNG · ${state.width}×${state.height}`;
+
+                document.getElementById('btn-download').disabled = false;
+                document.getElementById('btn-save').disabled = false;
+
+                // Save to local history
+                addToHistory(state.symbol, state.interval, objectUrl);
+                showToast('✅ Chart generated!');
+            } catch (err) {
+                placeholder.style.display = 'flex';
+                placeholder.innerHTML = `<div class="big-icon">❌</div><h3>Generation Failed</h3><p>${err.message}</p>`;
+                dot.classList.remove('loading');
+                statusText.textContent = `Error: ${err.message}`;
+                showToast('❌ ' + err.message, true);
+            }
+
+            loading.classList.remove('show');
+            btn.disabled = false; btn.textContent = '▶ Generate Chart';
+        }
+
+        function downloadChart() {
+            if (!currentBlob) return;
+            const filename = `${state.symbol.replace(':', '_')}_${state.interval}_${Date.now()}.png`;
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(currentBlob);
+            a.download = filename;
+            a.click();
+            showToast(`⬇ Downloading ${filename}`);
+        }
+
+        function copyUrl() {
+            const full = `${location.origin}${currentUrl}`;
+            navigator.clipboard.writeText(full);
+            showToast('🔗 API URL copied to clipboard!');
+        }
+
+        async function saveToStorage() {
+            const btn = document.getElementById('btn-save');
+            btn.disabled = true; btn.textContent = '⏳ Saving...';
+            try {
+                const res = await fetch('/v2/tradingview/advanced-chart/storage', {
+                    method: 'POST',
+                    headers: { 'x-api-key': state.key, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        symbol: state.symbol, interval: state.interval,
+                        style: state.style, theme: state.theme,
+                        width: state.width, height: state.height,
+                        studies: state.indicators,
+                    })
+                });
+                const data = await res.json();
+                if (data.url) {
+                    navigator.clipboard.writeText(`${location.origin}${data.url}`);
+                    showToast(`💾 Saved! URL copied: ${data.url}`);
+                }
+            } catch (err) {
+                showToast('❌ Save failed: ' + err.message, true);
+            }
+            btn.textContent = '💾 Save to Cloud'; btn.disabled = false;
+        }
+
+        function addToHistory(symbol, interval, url) {
+            history.unshift({ symbol, interval, url, time: Date.now() });
+            if (history.length > 8) history.pop();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            if (history.length === 0) return;
+            const section = document.getElementById('recent-section');
+            const grid = document.getElementById('recent-grid');
+            section.style.display = 'block';
+            grid.innerHTML = history.slice(0, 8).map((h, i) => `
+            <div class="recent-card" onclick="loadHistory(${i})">
+                <img src="${h.url}" alt="${h.symbol}" onerror="this.style.display='none'">
+                <div class="recent-label">${h.symbol} ${h.interval}</div>
+            </div>
+        `).join('');
+        }
+
+        function loadHistory(i) {
+            const h = history[i];
+            document.getElementById('chart-img').src = h.url;
+            document.getElementById('chart-img').style.display = 'block';
+            document.getElementById('preview-placeholder').style.display = 'none';
+            document.getElementById('preview-title').textContent = `${h.symbol} · ${h.interval}`;
+            document.getElementById('btn-download').disabled = false;
+        }
+
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.background = isError ? 'rgba(239,83,80,0.15)' : '';
+            t.style.borderColor = isError ? 'rgba(239,83,80,0.4)' : '';
+            t.style.color = isError ? '#ef5350' : '';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        async function doRegister() {
+            const email = document.getElementById('reg-email').value.trim();
+            if (!email.includes('@')) { alert('Valid email required'); return; }
+            const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, tier: 'BASIC' }) });
+            const data = await res.json();
+            if (data.apiKey) {
+                document.getElementById('reg-result').classList.add('show');
+                document.getElementById('reg-key-display').textContent = data.apiKey;
+                document.getElementById('cb-key').value = data.apiKey;
+                state.key = data.apiKey;
+                localStorage.setItem('chartsnap_key', data.apiKey);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -292,6 +292,7 @@
         <div class="navbar-nav">
             <a class="nav-link" href="/">Home</a>
             <a class="nav-link" href="/#pricing">Pricing</a>
+            <a class="nav-link" href="/chart-builder.html">Chart Builder</a>
             <a class="nav-link" href="/dashboard.html">Dashboard</a>
         </div>
         <div class="navbar-actions">
@@ -616,7 +617,8 @@ for symbol in symbols:
                             <td><span class="param-optional">optional</span></td>
                             <td>BINANCE:BTCUSDT</td>
                             <td>Exchange:Symbol — e.g. <code>NSE:RELIANCE</code>, <code>BSE:SENSEX</code>,
-                                <code>BINANCE:BTCUSDT</code>, <code>NASDAQ:AAPL</code></td>
+                                <code>BINANCE:BTCUSDT</code>, <code>NASDAQ:AAPL</code>
+                            </td>
                         </tr>
                         <tr>
                             <td><span class="param-name">interval</span></td>
@@ -665,10 +667,10 @@ for symbol in symbols:
                 </div>
             </section>
 
-                <div class="code-panel active" id="adv1-curl">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code># NSE Reliance — daily candles with RSI + Bollinger Bands
+            <div class="code-panel active" id="adv1-curl">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># NSE Reliance — daily candles with RSI + Bollinger Bands
 curl "http://localhost:3000/v1/tradingview/advanced-chart\
 ?symbol=NSE:RELIANCE&interval=1D&theme=dark\
 &studies=Relative+Strength+Index&studies=Bollinger+Bands&key=YOUR_KEY" -o reliance.png
@@ -680,12 +682,12 @@ curl "http://localhost:3000/v1/tradingview/advanced-chart\
 # Bitcoin — 4h Heikin Ashi with MACD
 curl "http://localhost:3000/v1/tradingview/advanced-chart\
 ?symbol=BINANCE:BTCUSDT&interval=4h&style=heikinAshi&studies=MACD&key=YOUR_KEY" -o btc.png</code></pre>
-                    </div>
                 </div>
-                <div class="code-panel" id="adv1-js">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>// Telegram alert bot — on signal, send chart
+            </div>
+            <div class="code-panel" id="adv1-js">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>// Telegram alert bot — on signal, send chart
 const symbols = ['NSE:INFY', 'NSE:TCS', 'NSE:HDFCBANK'];
 
 for (const symbol of symbols) {
@@ -699,12 +701,12 @@ for (const symbol of symbols) {
   const buf = Buffer.from(await res.arrayBuffer());
   await bot.sendPhoto(chatId, buf, { caption: `📊 ${symbol}` });
 }</code></pre>
-                    </div>
                 </div>
-                <div class="code-panel" id="adv1-python">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>import requests
+            </div>
+            <div class="code-panel" id="adv1-python">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import requests
 
 # Morning market scan — top NSE stocks
 stocks = [
@@ -726,12 +728,12 @@ for symbol in stocks:
     with open(f"{symbol.replace(':', '_')}.png", "wb") as f:
         f.write(res.content)
     print(f"✅ Chart saved for {symbol}")</code></pre>
-                    </div>
                 </div>
-                <div class="code-panel" id="adv1-js">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>const params = new URLSearchParams({
+            </div>
+            <div class="code-panel" id="adv1-js">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>const params = new URLSearchParams({
   symbol: 'BINANCE:BTCUSDT',
   interval: '1D',
   theme: 'dark',
@@ -743,12 +745,12 @@ params.append('studies', 'MACD');
 const res = await fetch(`/v1/tradingview/advanced-chart?${params}`);
 const blob = await res.blob();
 document.querySelector('img').src = URL.createObjectURL(blob);</code></pre>
-                    </div>
                 </div>
-                <div class="code-panel" id="adv1-python">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>import requests
+            </div>
+            <div class="code-panel" id="adv1-python">
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import requests
 
 res = requests.get(
     "http://localhost:3000/v1/tradingview/advanced-chart",
@@ -762,82 +764,82 @@ res = requests.get(
 )
 with open("btc.png", "wb") as f:
     f.write(res.content)</code></pre>
-                    </div>
                 </div>
+            </div>
 
-                <h3>Query Parameters</h3>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Required</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="param-name">key</span></td>
-                            <td><span class="param-required">required</span></td>
-                            <td>—</td>
-                            <td>API key</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">symbol</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>BINANCE:BTCUSDT</td>
-                            <td>TradingView symbol</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">interval</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>1D</td>
-                            <td>Chart interval</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">width</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>800</td>
-                            <td>Width in pixels</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">height</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>600</td>
-                            <td>Height in pixels</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">style</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>candle</td>
-                            <td>Chart style (see Chart Styles)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">theme</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>dark</td>
-                            <td><code>dark</code> or <code>light</code></td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">studies</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>[]</td>
-                            <td>Indicator names (repeatable: &studies=RSI&studies=MACD)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">timezone</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>Etc/UTC</td>
-                            <td>TradingView timezone identifier</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">format</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>png</td>
-                            <td><code>png</code> or <code>jpeg</code></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h3>Query Parameters</h3>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Required</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">key</span></td>
+                        <td><span class="param-required">required</span></td>
+                        <td>—</td>
+                        <td>API key</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">symbol</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>BINANCE:BTCUSDT</td>
+                        <td>TradingView symbol</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">interval</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>1D</td>
+                        <td>Chart interval</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">width</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>800</td>
+                        <td>Width in pixels</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">height</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>600</td>
+                        <td>Height in pixels</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">style</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>candle</td>
+                        <td>Chart style (see Chart Styles)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">theme</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>dark</td>
+                        <td><code>dark</code> or <code>light</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">studies</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>[]</td>
+                        <td>Indicator names (repeatable: &studies=RSI&studies=MACD)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">timezone</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>Etc/UTC</td>
+                        <td>TradingView timezone identifier</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">format</span></td>
+                        <td><span class="param-optional">optional</span></td>
+                        <td>png</td>
+                        <td><code>png</code> or <code>jpeg</code></td>
+                    </tr>
+                </tbody>
+            </table>
             </section>
 
             <!-- ─── Advanced Chart v2 ──────────────────────────────────────── -->
