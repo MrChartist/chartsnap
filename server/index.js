@@ -21,10 +21,15 @@ app.use('/storage', express.static(path.join(__dirname, '../storage')));
 const v1Routes = require('./routes/v1');
 const v2Routes = require('./routes/v2');
 const v3Routes = require('./routes/v3');
+const renderRoutes = require('./routes/renders');
 
 app.use('/v1', v1Routes);
 app.use('/v2', v2Routes);
 app.use('/v3', v3Routes);
+
+// V2 Background Job APIs
+app.use('/v1/renders', renderRoutes);
+app.use('/v1/jobs', renderRoutes);
 
 // ─── Registration Endpoint ────────────────────────────────────────────────────
 // POST /api/register — Get a free API key

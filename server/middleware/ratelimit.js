@@ -1,7 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-const USAGE_FILE = path.join(__dirname, '../data/usage.json');
+const dbService = require('../services/db');
 
 // Tier config
 const TIERS = {
@@ -16,65 +13,74 @@ function getTierConfig(tier) {
     return TIERS[tier] || TIERS.BASIC;
 }
 
-function loadUsage() {
-    try {
-        return JSON.parse(fs.readFileSync(USAGE_FILE, 'utf8'));
-    } catch {
-        return {};
-    }
-}
-
-function saveUsage(usage) {
-    fs.writeFileSync(USAGE_FILE, JSON.stringify(usage, null, 2));
-}
-
-function todayKey() {
-    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-}
-
 function rateLimitMiddleware(req, res, next) {
-    const key = req.apiKey;
-    const tier = (req.keyData && req.keyData.tier) || 'BASIC';
+    const tenant = req.tenant;
+    if (!tenant) return next();
+
+    const tier = tenant.tier || 'BASIC';
     const config = getTierConfig(tier);
-
-    const usage = loadUsage();
-    const day = todayKey();
     const now = Date.now();
+    const db = dbService.getDb();
 
-    if (!usage[key]) usage[key] = {};
-    if (!usage[key][day]) usage[key][day] = { count: 0, lastRequest: 0 };
+    // Keys for token buckets
+    const day = new Date().toISOString().split('T')[0];
+    const dailyKey = `quota:${tenant.id}:${day}`;
+    const secKey = `rl:${tenant.id}:${Math.floor(now / 1000)}`;
 
-    const dayUsage = usage[key][day];
+    let limitError = null;
 
-    // Check daily limit
-    if (dayUsage.count >= config.dailyLimit) {
+    if (db) {
+        const checkLimits = db.transaction(() => {
+            // Check Daily Limit
+            let daily = db.prepare('SELECT count FROM rate_limits WHERE key = ?').get(dailyKey);
+            if (!daily) {
+                db.prepare('INSERT INTO rate_limits (key, count, reset_at) VALUES (?, 1, ?)').run(dailyKey, now + 86400000);
+            } else {
+                if (daily.count >= config.dailyLimit) return { type: 'daily', limit: config.dailyLimit };
+                db.prepare('UPDATE rate_limits SET count = count + 1 WHERE key = ?').run(dailyKey);
+            }
+
+            // Check Per-Second Burst
+            let sec = db.prepare('SELECT count FROM rate_limits WHERE key = ?').get(secKey);
+            if (!sec) {
+                db.prepare('INSERT INTO rate_limits (key, count, reset_at) VALUES (?, 1, ?)').run(secKey, now + 2000);
+            } else {
+                if (sec.count >= config.ratePerSec) return { type: 'rate', limit: config.ratePerSec };
+                db.prepare('UPDATE rate_limits SET count = count + 1 WHERE key = ?').run(secKey);
+            }
+
+            return null;
+        });
+
+        try {
+            limitError = checkLimits();
+        } catch (e) {
+            console.error('Rate limit DB transaction error', e);
+        }
+    }
+
+    // Set standard RateLimit headers
+    res.setHeader('RateLimit-Policy', `${config.ratePerSec};w=1, ${config.dailyLimit};w=86400`);
+
+    if (limitError) {
+        const retryAfter = limitError.type === 'rate' ? 1 : 86400;
+        res.setHeader('Retry-After', retryAfter.toString());
+        res.setHeader('RateLimit', `limit=${limitError.limit}, remaining=0, reset=${retryAfter}`);
+
         return res.status(429).json({
-            error: true,
-            message: `Daily request limit of ${config.dailyLimit} reached for ${tier} tier. Upgrade at chartsnap.dev/pricing`,
-            tier,
-            dailyLimit: config.dailyLimit,
-            usedToday: dayUsage.count,
+            type: "https://chartsnap.com/problems/rate-limit-exceeded",
+            title: "Rate limit exceeded",
+            status: 429,
+            detail: limitError.type === 'daily'
+                ? `Daily request limit of ${config.dailyLimit} reached for ${tier} tier. Upgrade at chartsnap.dev/pricing`
+                : `Rate limit exceeded. ${tier} tier allows ${config.ratePerSec} request(s)/second.`,
+            extensions: {
+                plan: tier,
+                retry_after_seconds: retryAfter
+            }
         });
     }
 
-    // Check rate limit (per second)
-    const msSinceLast = now - dayUsage.lastRequest;
-    const minGap = Math.floor(1000 / config.ratePerSec);
-    if (msSinceLast < minGap) {
-        return res.status(429).json({
-            error: true,
-            message: `Rate limit exceeded. ${tier} tier allows ${config.ratePerSec} request(s)/second.`,
-            tier,
-            rateLimit: config.ratePerSec,
-        });
-    }
-
-    // Update usage
-    dayUsage.count++;
-    dayUsage.lastRequest = now;
-    saveUsage(usage);
-
-    // Expose tier config to route handlers
     req.tierConfig = config;
     next();
 }
