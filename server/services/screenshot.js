@@ -7,6 +7,18 @@
 const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
 const axios = require('axios');
 const path = require('path');
+const puppeteer = require('puppeteer');
+
+let _browser = null;
+async function getBrowser() {
+    if (!_browser) {
+        _browser = await puppeteer.launch({
+            headless: "new",
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process', '--no-zygote']
+        });
+    }
+    return _browser;
+}
 
 // ─── Data Fetching ─────────────────────────────────────────────────────────────
 
@@ -616,9 +628,90 @@ async function generateMiniChart({
     ctx.fillStyle = 'rgba(120,123,134,0.3)';
     ctx.font = '10px monospace';
     ctx.textAlign = 'right';
-    ctx.fillText('chartsnap.dev', width - 8, height - 5);
-
     return await canvas.encode('png');
 }
 
-module.exports = { generateChart, generateMiniChart };
+// ─── Generate Layout Chart ───────────────────────────────────────────────────
+async function generateLayoutChart({ layout, symbol, interval, width, height }) {
+    if (!layout) throw new Error("Layout ID is required");
+    const browser = await getBrowser();
+    const page = await browser.newPage();
+
+    try {
+        await page.setViewport({ width: width || 1920, height: height || 1080 }); // Use dynamic resolution
+
+        let url = `https://in.tradingview.com/chart/${layout}/`;
+        const params = new URLSearchParams();
+        if (symbol) params.append('symbol', symbol);
+        if (interval) params.append('interval', interval);
+        // We explicitly DO NOT modify the theme or other setups to preserve the user's native layout look.
+
+        if ([...params].length > 0) {
+            url += `?${params.toString()}`;
+        }
+
+        console.log(`[Layout] Navigating to ${url}`);
+
+        // Wait until there are no more than 2 network connections for at least 500 ms.
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+
+        // Wait for the main chart center area to appear
+        await page.waitForSelector('.layout__area--center', { timeout: 15000 });
+
+        // Inject CSS to hide all UI elements except the chart canvas
+        await page.evaluate(() => {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                /* Hide everything except center area */
+                #layout-top-area,
+                .layout__area--left,
+                .layout__area--right,
+                .layout__area--bottom,
+                .widgetbar-wrap,
+                #footer,
+                header,
+                .tv-dialogs,
+                .tv-toasts,
+                #cookie-banner,
+                [data-role="toast-container"] {
+                    display: none !important;
+                }
+                
+                /* Ensure center area expands to remove empty space */
+                .layout__area--center {
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    z-index: 9999 !important;
+                }
+                
+                /* Remove body background if needed */
+                body { background: transparent !important; }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Give the chart 2 seconds to readjust and render fully after CSS injection
+        await new Promise(r => setTimeout(r, 2000));
+
+        // Find the center element and screenshot exactly that bounding box
+        const element = await page.$('.layout__area--center');
+        if (!element) throw new Error("Chart area not found after injection");
+
+        const buffer = await element.screenshot({ type: 'png' });
+        return { buffer, type: 'png' };
+
+    } finally {
+        await page.close();
+    }
+}
+
+module.exports = {
+    generateChart,
+    generateMiniChart,
+    generateLayoutChart
+};

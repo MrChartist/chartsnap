@@ -46,4 +46,29 @@ router.post('/tradingview/advanced-chart/storage', auth, rateLimitMiddleware, as
     }
 });
 
+// GET /v2/tradingview/layout-chart
+router.get('/tradingview/layout-chart', auth, rateLimitMiddleware, async (req, res) => {
+    const { layout, symbol, interval, width = 1920, height = 1080, format = 'png' } = req.query;
+
+    if (!layout) {
+        return res.status(400).json({ error: true, message: 'The `layout` parameter is required.' });
+    }
+
+    const cfg = req.tierConfig;
+    const w = Math.min(parseInt(width) || 1920, cfg.maxWidth || 1920);
+    const h = Math.min(parseInt(height) || 1080, cfg.maxHeight || 1080);
+
+    try {
+        const { generateLayoutChart } = require('../services/screenshot');
+        const { buffer, type } = await generateLayoutChart({ layout, symbol, interval, width: w, height: h });
+
+        res.set('Content-Type', `image/${type}`);
+        res.set('X-ChartSnap-Tier', req.keyData.tier);
+        res.send(buffer);
+    } catch (err) {
+        console.error('[v2/layout-chart]', err.message);
+        res.status(500).json({ error: true, message: err.message });
+    }
+});
+
 module.exports = router;
