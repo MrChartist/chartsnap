@@ -1,14 +1,14 @@
 {
   "demo-key-basic-001": {
     "2026-03-05": {
-      "count": 4,
-      "lastRequest": 1772696337415
+      "count": 6,
+      "lastRequest": 1772722851346
     }
   },
   "demo-key-pro-001": {
     "2026-03-05": {
-      "count": 9,
-      "lastRequest": 1772696284528
+      "count": 12,
+      "lastRequest": 1772722851151
     }
   }
 }

@@ -61,6 +61,9 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+// Initialize Telegram Bot
+require('./telegram');
+
 // Start server
 app.listen(PORT, () => {
     console.log(`\n🚀 ChartSnap API Server running at http://localhost:${PORT}`);

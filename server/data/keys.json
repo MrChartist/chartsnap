@@ -28,5 +28,11 @@
     "tier": "BASIC",
     "createdAt": "2026-03-05T07:36:53.061Z",
     "active": true
+  },
+  "cs-32ffdfee-11ca-42fd-9bc3-e7679c26f789": {
+    "email": "test@chartsnap.io",
+    "tier": "PRO",
+    "createdAt": "2026-03-05T15:00:50.266Z",
+    "active": true
   }
 }
