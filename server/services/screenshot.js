@@ -82,7 +82,6 @@ const HIDE_UI_CSS = `
     .chart-toolbar,
     [class*="header-MainSeriesHover"],
     .layout__area--left,
-    .layout__area--right,
     .layout__area--bottom,
     .widgetbar-wrap,
     #footer,
@@ -106,8 +105,15 @@ const HIDE_UI_CSS = `
         opacity: 0 !important;
     }
 
-    /* Force chart center to fill the entire viewport */
-    .layout__area--center,
+    /* Let TradingView scale the container naturally */
+    .layout__page {
+        top: 0 !important; left: 0 !important;
+        right: 0 !important; bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+    }
+
     [class*="chart-container"],
     [class*="ChartContainer"] {
         position: fixed !important;
@@ -116,7 +122,6 @@ const HIDE_UI_CSS = `
         width: 100vw !important;
         height: 100vh !important;
         z-index: 9999 !important;
-        overflow: hidden !important;
     }
 
     body, html {
@@ -232,8 +237,12 @@ async function generateLayoutChart({ layout, symbol, interval, range, width = 19
         // Wait for the main chart area
         await page.waitForSelector('.layout__area--center', { timeout: 20000 });
 
-        // Inject UI-hiding CSS  
-        await page.addStyleTag({ content: HIDE_UI_CSS });
+        // Inject UI-hiding CSS with exact dimension enforcement
+        const injectCss = HIDE_UI_CSS + `
+            body, html { width: ${width}px !important; height: ${height}px !important; }
+            .layout__page, [class*="chart-container"], [class*="ChartContainer"] { width: ${width}px !important; height: ${height}px !important; }
+        `;
+        await page.addStyleTag({ content: injectCss });
 
         // Handle Date Range (e.g., 1D, 5D, 1M, YTD, ALL)
         if (range) {
@@ -267,15 +276,17 @@ async function generateLayoutChart({ layout, symbol, interval, range, width = 19
         // Let chart re-render after CSS injection
         await new Promise(r => setTimeout(r, 2500));
 
-        // Screenshot just the chart center area
-        const element = await page.$('.layout__area--center');
-        if (!element) {
-            // Fallback: screenshot full page
-            const buffer = await page.screenshot({ type: 'png', fullPage: false });
-            return { buffer, type: 'png' };
-        }
+        // Finally snapshot precisely evaluating bounding box for right axis
+        const finalClip = await page.evaluate(() => {
+            const el = document.querySelector('.layout__page') || document.body;
+            const rect = el.getBoundingClientRect();
+            return { x: 0, y: 0, width: rect.width || document.body.clientWidth, height: rect.height || document.body.clientHeight };
+        });
 
-        const buffer = await element.screenshot({ type: 'png' });
+        const buffer = await page.screenshot({
+            type: 'png',
+            clip: finalClip
+        });
         return { buffer, type: 'png' };
 
     } finally {
