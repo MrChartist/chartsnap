@@ -1179,15 +1179,6 @@
                 });
             });
 
-            // Range buttons
-            document.querySelectorAll('#range-grid .select-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('#range-grid .select-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.range = btn.dataset.val;
-                });
-            });
-
             // Size buttons
             document.querySelectorAll('#size-grid .select-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1231,8 +1222,8 @@
         // Generate Chart Flow
         async function generateChart() {
             // Read latest raw inputs if user typed without firing event
-            if (inputSymbol.value) state.symbol = inputSymbol.value.trim().toUpperCase();
-            if (inputLayout.value) state.layout = inputLayout.value.trim();
+            state.symbol = inputSymbol.value ? inputSymbol.value.trim().toUpperCase() : '';
+            state.layout = inputLayout.value ? inputLayout.value.trim() : '';
 
             if (!state.layout) {
                 showToast('❌ TradingView Layout ID is required', true);
@@ -1373,7 +1364,7 @@
             const host = window.location.origin;
             let url = '';
             if (state.layout) {
-                url = `${host}/v1/tradingview/layout-chart/${state.layout}?symbol=${state.symbol}&interval=${state.interval}&width=${state.width}&height=${state.height}`;
+                url = `${host}/v1/tradingview/layout-chart/${state.layout}?symbol=${state.symbol}&interval=${state.interval}&range=${state.range}&width=${state.width}&height=${state.height}`;
             } else {
                 url = `${host}/v1/tradingview/advanced-chart?symbol=${state.symbol}&interval=${state.interval}&width=${state.width}&height=${state.height}`;
             }
