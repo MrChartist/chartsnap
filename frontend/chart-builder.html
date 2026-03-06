@@ -781,14 +781,6 @@
                 </div>
             </div>
 
-            <hr class="ctrl-divider">
-
-            <!-- API Key -->
-            <div class="ctrl-section">
-                <div class="ctrl-label">API Key</div>
-                <input class="key-input" id="cb-key" type="text" placeholder="Your API key..." value="demo-key-pro-001">
-            </div>
-
             <button class="generate-btn" id="cb-generate" onclick="generateChart()">
                 ▶ Generate Chart
             </button>
@@ -883,9 +875,6 @@
 
         // ── Init ──
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore saved key
-            const savedKey = localStorage.getItem('chartsnap_key');
-            if (savedKey) { document.getElementById('cb-key').value = savedKey; state.key = savedKey; }
 
             // Interval buttons
             document.querySelectorAll('.interval-btn').forEach(btn => {
@@ -921,12 +910,6 @@
                 updateUrlBar();
             });
 
-            // Key input
-            document.getElementById('cb-key').addEventListener('input', e => {
-                state.key = e.target.value.trim();
-                localStorage.setItem('chartsnap_key', state.key);
-            });
-
             updateUrlBar();
             renderHistory();
         });
@@ -947,7 +930,6 @@
                 interval: state.interval,
                 width: state.width,
                 height: state.height,
-                key: state.key,
             });
             return `/v1/tradingview/advanced-chart?${params.toString()}`;
         }
@@ -978,9 +960,7 @@
             dot.classList.add('loading');
             placeholder.style.display = 'none';
 
-            state.symbol = document.getElementById('cb-symbol').value.trim().toUpperCase() || state.symbol;
             state.layout = document.getElementById('cb-layout').value.trim();
-            state.key = document.getElementById('cb-key').value.trim();
 
             try {
                 let imageBlob;
