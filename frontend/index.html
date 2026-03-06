@@ -27,8 +27,8 @@
       <a class="nav-link" href="#faq">FAQ</a>
     </div>
     <div class="navbar-actions">
-      <a class="btn btn-ghost btn-sm" href="/dashboard.html">Dashboard</a>
-      <button class="btn btn-primary btn-sm" onclick="openModal('register-modal')">Get API Key →</button>
+      <a class="btn btn-ghost btn-sm" href="/docs.html">Documentation</a>
+      <a class="btn btn-primary btn-sm" href="/chart-builder.html">Open Chart Builder →</a>
     </div>
   </nav>
 
@@ -50,9 +50,9 @@
             90+ technical indicators, custom styles, real-time data — all from a single HTTP request.
           </p>
           <div class="hero-actions">
-            <button class="btn btn-primary btn-lg" onclick="openModal('register-modal')">
-              🚀 Get Free API Key
-            </button>
+            <a class="btn btn-primary btn-lg" href="/chart-builder.html">
+              🚀 Open Visulal Builder
+            </a>
             <a class="btn btn-secondary btn-lg" href="/docs.html">Read the Docs</a>
           </div>
           <div class="hero-stats">
@@ -147,19 +147,21 @@
       <div class="howto-steps">
         <div class="howto-step fade-in">
           <div class="howto-num">1</div>
-          <h3>Get Your API Key</h3>
-          <p>Register with your email and receive a free BASIC tier API key instantly. No credit card required.</p>
+          <h3>Build Your Chart</h3>
+          <p>Use our visual Chart Builder or write an HTTP request. Provide your TradingView Layout ID to perfectly
+            match your saved drawings and indicators.</p>
         </div>
         <div class="howto-step fade-in">
           <div class="howto-num">2</div>
           <h3>Make a Request</h3>
-          <p>Call the API with your symbol, interval, and desired parameters. Works with curl, JavaScript, Python, or
-            any HTTP client.</p>
+          <p>Call the open API with your parameters. Works with curl, JavaScript, Python, or any HTTP client. No
+            authentication required.</p>
         </div>
         <div class="howto-step fade-in">
           <div class="howto-num">3</div>
           <h3>Receive the Image</h3>
-          <p>Get back a PNG or JPEG chart image ready to send in Telegram, Discord, email, or embed in your web app.</p>
+          <p>Get back a high-res PNG or JPEG chart image ready to send in Telegram, Discord, email, or embed in your web
+            app.</p>
         </div>
       </div>
     </div>
@@ -191,13 +193,12 @@
 &width=600&height=300\
 &theme=dark\
 &key=YOUR_API_KEY"</span> \
+&theme=dark"</span> \
   -o btcusdt-chart.png
 
 <span class="token-comment"># Advanced chart with indicators (v2 POST)</span>
 <span class="token-url">curl</span> -X POST <span class="token-string">"http://localhost:3000/v2/tradingview/advanced-chart"</span> \
-  -H <span class="token-string">"x-api-key: YOUR_API_KEY"</span> \
-  -H <span class="token-string">"Content-Type: application/json"</span> \
-  -d <span class="token-string">'{"symbol":"NASDAQ:TSLA","theme":"dark","interval":"4h","studies":[{"name":"RSI"},{"name":"MACD"}]}'</span> \
+  -d <span class="token-string">'{"symbol":"NASDAQ:MSFT","interval":"1W","range":"1Y"}'</span> \
   -o tesla-4h.png</pre>
           </div>
           <div class="code-block" id="code-js" style="display:none">
@@ -257,100 +258,9 @@ response = requests.<span class="token-method">post</span>(
           </div>
         </div>
       </div>
-    </div>
   </section>
 
-  <!-- ─── Pricing ────────────────────────────────────────────────────────────── -->
-  <section class="pricing" id="pricing">
-    <div class="container">
-      <div class="pricing-header fade-in">
-        <div class="section-badge">💎 Pricing</div>
-        <h2 class="section-title">Start free, scale as<br><span class="gradient-text">you grow</span></h2>
-        <p class="section-sub" style="margin:0 auto">No credit card needed to start. Upgrade anytime for higher limits
-          and resolution.</p>
-      </div>
-      <div class="pricing-grid">
-        <!-- BASIC -->
-        <div class="pricing-card fade-in">
-          <div class="pricing-tier">Basic</div>
-          <div class="pricing-price">
-            <span class="pricing-price-num gradient-text">$0</span>
-            <span class="pricing-price-period">/month</span>
-          </div>
-          <p class="pricing-desc">Perfect for testing and personal projects.</p>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><span class="check">✓</span> 50 requests / day</li>
-            <li><span class="check">✓</span> 1 request / second</li>
-            <li><span class="check">✓</span> Max 800×600 resolution</li>
-            <li><span class="check">✓</span> 3 indicators per chart</li>
-            <li><span class="dash">—</span> No watermark removal</li>
-            <li><span class="dash">—</span> Email support</li>
-          </ul>
-          <button class="btn btn-secondary btn-sm pricing-cta" onclick="openModal('register-modal')">Get Started
-            Free</button>
-        </div>
-        <!-- PRO -->
-        <div class="pricing-card featured fade-in">
-          <div class="pricing-tier" style="color:var(--accent-purple)">Pro</div>
-          <div class="pricing-price">
-            <span class="pricing-price-num gradient-text">$7</span>
-            <span class="pricing-price-period">/month</span>
-          </div>
-          <p class="pricing-desc">For developers and trading bots with moderate usage.</p>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><span class="check">✓</span> 500 requests / day</li>
-            <li><span class="check">✓</span> 10 requests / second</li>
-            <li><span class="check">✓</span> Max 1920×1080 resolution</li>
-            <li><span class="check">✓</span> 5 indicators per chart</li>
-            <li><span class="check">✓</span> No chart watermark</li>
-            <li><span class="check">✓</span> Priority support</li>
-          </ul>
-          <button class="btn btn-primary btn-sm pricing-cta" onclick="openModal('register-modal')">Start Pro →</button>
-        </div>
-        <!-- MEGA -->
-        <div class="pricing-card fade-in">
-          <div class="pricing-tier">Mega</div>
-          <div class="pricing-price">
-            <span class="pricing-price-num gradient-text">$10</span>
-            <span class="pricing-price-period">/month</span>
-          </div>
-          <p class="pricing-desc">For high-volume trading applications and services.</p>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><span class="check">✓</span> 1,000 requests / day</li>
-            <li><span class="check">✓</span> 15 requests / second</li>
-            <li><span class="check">✓</span> Max 1920×1600 resolution</li>
-            <li><span class="check">✓</span> 10 indicators per chart</li>
-            <li><span class="check">✓</span> No chart watermark</li>
-            <li><span class="check">✓</span> Priority support</li>
-          </ul>
-          <button class="btn btn-secondary btn-sm pricing-cta" onclick="openModal('register-modal')">Get Mega →</button>
-        </div>
-        <!-- ULTRA -->
-        <div class="pricing-card fade-in">
-          <div class="pricing-tier">Ultra</div>
-          <div class="pricing-price">
-            <span class="pricing-price-num gradient-text">$20</span>
-            <span class="pricing-price-period">/month</span>
-          </div>
-          <p class="pricing-desc">For enterprise products requiring maximum throughput.</p>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><span class="check">✓</span> 3,000 requests / day</li>
-            <li><span class="check">✓</span> 35 requests / second</li>
-            <li><span class="check">✓</span> Max 2048×1920 resolution</li>
-            <li><span class="check">✓</span> 25 indicators per chart</li>
-            <li><span class="check">✓</span> No chart watermark</li>
-            <li><span class="check">✓</span> Dedicated support</li>
-          </ul>
-          <button class="btn btn-secondary btn-sm pricing-cta" onclick="openModal('register-modal')">Get Ultra
-            →</button>
-        </div>
-      </div>
-    </div>
-  </section>
+
 
   <!-- ─── FAQ ────────────────────────────────────────────────────────────────── -->
   <section class="faq" id="faq">
@@ -387,7 +297,8 @@ response = requests.<span class="token-method">post</span>(
           </div>
           <div class="faq-answer">
             <p>You can authenticate using three methods: include your key as an <code>x-api-key</code> header, as
-              <code>Authorization: Bearer YOUR_KEY</code>, or as a <code>?key=YOUR_KEY</code> query parameter.</p>
+              <code>Authorization: Bearer YOUR_KEY</code>, or as a <code>?key=YOUR_KEY</code> query parameter.
+            </p>
           </div>
         </div>
         <div class="faq-item" onclick="toggleFaq(this)">
@@ -431,7 +342,7 @@ response = requests.<span class="token-method">post</span>(
         <h2>Ready to start capturing<br><span class="gradient-text">chart images?</span></h2>
         <p>Get your free API key in seconds. No credit card required.</p>
         <div class="cta-actions">
-          <button class="btn btn-primary btn-lg" onclick="openModal('register-modal')">🚀 Get Free API Key</button>
+          <a class="btn btn-primary btn-lg" href="/chart-builder.html">🚀 Open Chart Builder</a>
           <a class="btn btn-secondary btn-lg" href="/docs.html">Read Docs</a>
         </div>
       </div>
@@ -480,37 +391,6 @@ response = requests.<span class="token-method">post</span>(
     </div>
   </footer>
 
-  <!-- ─── Register Modal ─────────────────────────────────────────────────────── -->
-  <div class="modal-bg" id="register-modal" onclick="if(event.target===this)closeModal('register-modal')">
-    <div class="modal">
-      <button class="modal-close" onclick="closeModal('register-modal')">×</button>
-      <h2>Get your free API key</h2>
-      <p>Start with 50 requests/day for free. No credit card required.</p>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input class="form-input" type="email" id="reg-email" placeholder="you@example.com" />
-      </div>
-      <div class="form-group">
-        <label>Plan</label>
-        <select class="form-select" id="reg-tier">
-          <option value="BASIC">Basic — Free (50 req/day)</option>
-          <option value="PRO">Pro — $7/mo (500 req/day)</option>
-          <option value="MEGA">Mega — $10/mo (1000 req/day)</option>
-          <option value="ULTRA">Ultra — $20/mo (3000 req/day)</option>
-        </select>
-      </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="registerKey()">
-        Generate API Key →
-      </button>
-      <div class="modal-result" id="reg-result">
-        <h4>🎉 Your API Key</h4>
-        <code id="reg-key-display"></code>
-        <br><br>
-        <button class="btn btn-ghost btn-sm" onclick="copyNewKey()">Copy Key</button>
-        <a class="btn btn-secondary btn-sm" href="/dashboard.html">Go to Dashboard</a>
-      </div>
-    </div>
-  </div>
 
   <!-- ─── Toast ──────────────────────────────────────────────────────────────── -->
   <div class="toast" id="toast"></div>

@@ -209,7 +209,7 @@ async function generateMiniChart({
 }
 
 // ─── Layout Chart Screenshot (User's saved TradingView layout) ──────────────
-async function generateLayoutChart({ layout, symbol, interval, width = 1920, height = 1080 }) {
+async function generateLayoutChart({ layout, symbol, interval, range, width = 1920, height = 1080 }) {
     if (!layout) throw new Error('Layout ID is required');
     const browser = await getBrowser();
     const page = await browser.newPage();
@@ -234,6 +234,35 @@ async function generateLayoutChart({ layout, symbol, interval, width = 1920, hei
 
         // Inject UI-hiding CSS  
         await page.addStyleTag({ content: HIDE_UI_CSS });
+
+        // Handle Date Range (e.g., 1D, 5D, 1M, YTD, ALL)
+        if (range) {
+            const rangeTarget = range.trim().toUpperCase();
+            console.log(`[Layout] Applying date range: ${rangeTarget}`);
+
+            // Wait for bottom toolbar buttons to appear
+            await page.waitForFunction(() => {
+                const btns = Array.from(document.querySelectorAll('button, div[role="button"]'));
+                return btns.some(b => b.textContent && b.textContent.trim().toUpperCase() === '1D');
+            }, { timeout: 10000 }).catch(() => console.log('[Layout] Date range buttons not found or took too long'));
+
+            // Click the matching button closest to the bottom (to avoid clicking top interval if text matches)
+            await page.evaluate((r) => {
+                const btns = Array.from(document.querySelectorAll('button, div[role="button"]'))
+                    .filter(b => b.textContent && b.textContent.trim().toUpperCase() === r);
+
+                if (btns.length === 1) {
+                    btns[0].click();
+                } else if (btns.length > 1) {
+                    // Sort by bottom Y coordinate descending (closest to bottom of window)
+                    const lowerBtn = btns.sort((a, b) => b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom)[0];
+                    if (lowerBtn) lowerBtn.click();
+                }
+            }, rangeTarget);
+
+            // Wait for chart to re-render after range change
+            await new Promise(r => setTimeout(r, 2000));
+        }
 
         // Let chart re-render after CSS injection
         await new Promise(r => setTimeout(r, 2500));

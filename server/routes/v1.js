@@ -38,7 +38,7 @@ router.get('/tradingview/advanced-chart', async (req, res) => {
  */
 router.post('/tradingview/layout-chart/:layoutId', async (req, res) => {
     const { layoutId } = req.params;
-    const { symbol, interval = '1D', width = 1920, height = 1080 } = req.body;
+    const { symbol, interval = '1D', range, width = 1920, height = 1080 } = req.body;
 
     if (!layoutId) {
         return res.status(400).json({ error: true, message: 'Layout ID is required in the URL path.' });
@@ -51,6 +51,7 @@ router.post('/tradingview/layout-chart/:layoutId', async (req, res) => {
             layout: layoutId,
             symbol,
             interval,
+            range,
             width: parseInt(width),
             height: parseInt(height),
         });
@@ -67,15 +68,16 @@ router.post('/tradingview/layout-chart/:layoutId', async (req, res) => {
 // GET /v1/tradingview/layout-chart/:layoutId?symbol=NSE:SAIL&interval=1D
 router.get('/tradingview/layout-chart/:layoutId', async (req, res) => {
     const { layoutId } = req.params;
-    const { symbol, interval = '1D', width = 1920, height = 1080 } = req.query;
+    const { symbol, interval = '1D', range, width = 1920, height = 1080 } = req.query;
 
-    console.log(`[layout-chart] layout=${layoutId} symbol=${symbol} interval=${interval} ${width}x${height}`);
+    console.log(`[layout-chart] layout=${layoutId} symbol=${symbol} interval=${interval} range=${range} ${width}x${height}`);
 
     try {
         const { buffer, type } = await generateLayoutChart({
             layout: layoutId,
             symbol,
             interval,
+            range,
             width: parseInt(width),
             height: parseInt(height),
         });

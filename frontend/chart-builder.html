@@ -906,10 +906,12 @@
             <div class="controls-scrollarea">
 
                 <!-- TradingView Layout ID -->
-                <div class="control-group">
+                <div class="control-group"
+                    style="background: rgba(167, 139, 250, 0.05); padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(167, 139, 250, 0.2);">
                     <div class="group-head">
-                        <label class="group-label">TradingView Layout</label>
-                        <span class="group-hint">Optional</span>
+                        <label class="group-label" style="color: #A78BFA; font-weight: 700;">TradingView Layout
+                            ID</label>
+                        <span class="group-hint" style="color: var(--accent-purple)">(Highly Recommended)</span>
                     </div>
                     <div class="input-wrapper">
                         <div class="input-icon">
@@ -922,7 +924,8 @@
                     </div>
                     <div class="group-hint" style="margin-top:-4px">From your chart share URL:
                         <code>in.tradingview.com/chart/<b>ID</b>/</code>. Captures your exact saved drawings and
-                        indicators.</div>
+                        indicators.
+                    </div>
                 </div>
 
                 <div style="height: 1px; background: var(--border-subtle); margin: 8px 0;"></div>
@@ -983,6 +986,25 @@
                     </div>
                 </div>
 
+                <!-- Date Range (Horizontal zoom) -->
+                <div class="control-group">
+                    <div class="group-head">
+                        <label class="group-label">Date Range</label>
+                        <span class="group-hint">Visual Area</span>
+                    </div>
+                    <div class="btn-grid cols-5" id="range-grid">
+                        <div class="select-btn" data-val="1D">1D</div>
+                        <div class="select-btn" data-val="5D">5D</div>
+                        <div class="select-btn" data-val="1M">1M</div>
+                        <div class="select-btn" data-val="3M">3M</div>
+                        <div class="select-btn" data-val="6M">6M</div>
+                        <div class="select-btn" data-val="YTD">YTD</div>
+                        <div class="select-btn" data-val="1Y">1Y</div>
+                        <div class="select-btn" data-val="5Y">5Y</div>
+                        <div class="select-btn active" data-val="ALL">ALL</div>
+                    </div>
+                </div>
+
                 <!-- Output Resolution -->
                 <div class="control-group">
                     <div class="group-head">
@@ -1025,6 +1047,8 @@
                     </div>
                     <div class="chart-subtitle">
                         <span id="p-interval">1D</span>
+                        <div class="dot-separator"></div>
+                        <span id="p-range" style="color:var(--text-main)">ALL Range</span>
                         <div class="dot-separator"></div>
                         <span id="p-size">800 × 600</span>
                         <div class="dot-separator"></div>
@@ -1103,6 +1127,7 @@
         const state = {
             symbol: 'NSE:NIFTY',
             interval: '1D',
+            range: 'ALL',
             layout: '',
             width: 800,
             height: 600
@@ -1126,6 +1151,7 @@
 
         const pSymbol = document.getElementById('p-symbol');
         const pInterval = document.getElementById('p-interval');
+        const pRange = document.getElementById('p-range');
         const pSize = document.getElementById('p-size');
         const pMode = document.getElementById('p-mode');
         const pFilesize = document.getElementById('p-filesize');
@@ -1141,6 +1167,24 @@
                     document.querySelectorAll('#interval-grid .select-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     state.interval = btn.dataset.val;
+                });
+            });
+
+            // Range buttons
+            document.querySelectorAll('#range-grid .select-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#range-grid .select-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.range = btn.dataset.val;
+                });
+            });
+
+            // Range buttons
+            document.querySelectorAll('#range-grid .select-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#range-grid .select-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.range = btn.dataset.val;
                 });
             });
 
@@ -1178,7 +1222,7 @@
             if (state.layout) {
                 return `<span class="code-method post">POST</span> <span class="code-domain">${domain}</span><span class="code-path">/v1/tradingview/layout-chart/${state.layout}</span> \\
   <span class="code-param">-H</span> "Content-Type: application/json" \\
-  <span class="code-param">-d</span> '{"symbol": "<span class="code-val">${state.symbol}</span>", "interval": "<span class="code-val">${state.interval}</span>", "width": <span class="code-val">${state.width}</span>, "height": <span class="code-val">${state.height}</span>}'`;
+  <span class="code-param">-d</span> '{"symbol": "<span class="code-val">${state.symbol}</span>", "interval": "<span class="code-val">${state.interval}</span>", "range": "<span class="code-val">${state.range}</span>", "width": <span class="code-val">${state.width}</span>, "height": <span class="code-val">${state.height}</span>}'`;
             } else {
                 return `<span class="code-method get">GET</span> &nbsp;<span class="code-domain">${domain}</span><span class="code-path">/v1/tradingview/advanced-chart</span>?<br>        <span class="code-param">symbol</span>=<span class="code-val">${state.symbol}</span>&<br>        <span class="code-param">interval</span>=<span class="code-val">${state.interval}</span>&<br>        <span class="code-param">width</span>=<span class="code-val">${state.width}</span>&<br>        <span class="code-param">height</span>=<span class="code-val">${state.height}</span>`;
             }
@@ -1221,6 +1265,7 @@
                         body: JSON.stringify({
                             symbol: state.symbol || undefined,
                             interval: state.interval,
+                            range: state.range,
                             width: state.width,
                             height: state.height,
                         })
@@ -1267,6 +1312,7 @@
                 pMode.style.background = state.layout ? 'rgba(167, 139, 250, 0.1)' : 'rgba(6, 182, 212, 0.15)';
 
                 pInterval.textContent = state.interval;
+                pRange.textContent = `${state.range} Range`;
                 pSize.textContent = `${state.width} × ${state.height}`;
                 pFilesize.textContent = `${(currentBlob.size / 1024).toFixed(1)} KB`;
 
