@@ -7,1471 +7,1472 @@
     <title>API Documentation — ChartSnap</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css" />
     <style>
-        /* ── Code block copy button ── */
-        .code-block {
-            position: relative;
-            margin: 10px 0;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .copy-btn {
+        :root {
+            --bg: #0a0d14;
+            --sidebar-bg: #0d1117;
+            --card: #161b22;
+            --card2: #1a2130;
+            --border: rgba(255, 255, 255, 0.08);
+            --border2: rgba(255, 255, 255, 0.05);
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --muted2: #94a3b8;
+            --accent: #7b61ff;
+            --accent2: #06b6d4;
+            --green: #22c55e;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --blue: #3b82f6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── TOP NAV ── */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 13, 20, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 56px;
+            gap: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .topnav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .topnav-links a {
+            text-decoration: none;
+            color: var(--muted2);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all .15s;
+        }
+
+        .topnav-links a:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .topnav-links a.active {
+            color: var(--accent);
+            background: rgba(123, 97, 255, 0.1);
+        }
+
+        .topnav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-key {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: opacity .15s;
+        }
+
+        .btn-key:hover {
+            opacity: 0.88;
+        }
+
+        /* ── LAYOUT ── */
+        .docs-layout {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            position: sticky;
+            top: 56px;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 99px;
+        }
+
+        .sidebar-group {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-group-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--muted);
+            padding: 14px 20px 6px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted2);
+            text-decoration: none;
+            transition: all .12s;
+            position: relative;
+        }
+
+        .sidebar-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .sidebar-link.active {
+            color: var(--accent);
+            background: rgba(123, 97, 255, 0.1);
+            font-weight: 600;
+        }
+
+        .sidebar-link.active::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #9599a5;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .method-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-get {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--green);
+        }
+
+        .badge-post {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--blue);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .docs-main {
+            flex: 1;
+            min-width: 0;
+            padding: 48px 60px;
+            max-width: 900px;
+        }
+
+        /* ── SECTIONS ── */
+        .doc-section {
+            margin-bottom: 72px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .section-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            background: linear-gradient(135deg, var(--text) 60%, var(--muted2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-desc {
+            color: var(--muted2);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 28px;
+            max-width: 680px;
+        }
+
+        /* ── ENDPOINT CARD ── */
+        .endpoint-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border2);
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            user-select: none;
+            transition: background .15s;
+        }
+
+        .endpoint-header:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .method-pill {
+            font-size: 11px;
+            font-weight: 800;
             padding: 4px 10px;
             border-radius: 6px;
-            cursor: pointer;
-            transition: all .2s;
-            font-family: inherit;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.5px;
+            min-width: 50px;
+            text-align: center;
         }
 
-        .copy-btn:hover {
-            background: rgba(123, 97, 255, 0.3);
-            color: #fff;
-            border-color: #7b61ff;
+        .method-get {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
-        .copy-btn.copied {
-            color: #26a69a;
-            border-color: #26a69a;
+        .method-post {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
-        /* ── Code language tabs ── */
-        .code-tabs {
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .endpoint-summary {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .endpoint-toggle {
+            font-size: 12px;
+            color: var(--muted);
+            transition: transform .2s;
+        }
+
+        .endpoint-body {
+            padding: 0;
+            border-top: none;
+        }
+
+        /* ── PARAMS TABLE ── */
+        .params-section {
+            padding: 20px;
+        }
+
+        .params-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .params-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .params-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border2);
+            vertical-align: top;
+        }
+
+        .params-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .param-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #c4b5fd;
+            white-space: nowrap;
+        }
+
+        .required-tag {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .optional-tag {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(100, 116, 139, 0.15);
+            color: var(--muted);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .param-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #67e8f9;
+        }
+
+        .param-desc {
+            color: var(--muted2);
+            font-size: 13px;
+        }
+
+        .param-default {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #fbbf24;
+        }
+
+        /* ── CODE BLOCK ── */
+        .code-wrap {
+            margin: 0;
+            border-top: 1px solid var(--border2);
+        }
+
+        .code-tabs-row {
             display: flex;
-            gap: 3px;
-            margin-bottom: -1px;
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border2);
+            gap: 2px;
         }
 
         .code-tab {
-            padding: 5px 13px;
+            padding: 8px 14px;
             font-size: 12px;
             font-weight: 500;
+            color: var(--muted);
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: none;
-            border-radius: 6px 6px 0 0;
-            color: #787b86;
+            border-bottom: 2px solid transparent;
             transition: all .15s;
-            font-family: inherit;
+        }
+
+        .code-tab:hover {
+            color: var(--text);
         }
 
         .code-tab.active {
-            background: #0d1117;
-            color: #d1d4dc;
-            border-color: rgba(255, 255, 255, 0.15);
+            color: var(--accent);
+            border-bottom-color: var(--accent);
         }
 
         .code-panel {
             display: none;
+            position: relative;
         }
 
         .code-panel.active {
             display: block;
         }
 
-        .code-panel pre {
-            margin-top: 0;
-            border-radius: 0 6px 6px 6px;
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: #d1d4dc;
         }
 
-        /* ── Chart preview images ── */
-        .chart-preview {
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin: 16px 0;
-            background: #0e1117;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 120px;
-        }
-
-        .chart-preview img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 10px;
-        }
-
-        .chart-preview-caption {
-            font-size: 11px;
-            color: #4a5568;
-            text-align: center;
-            padding: 6px 0 2px;
+        pre .c {
+            color: var(--muted);
             font-style: italic;
         }
 
-        .v-split {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            align-items: start;
+        pre .k {
+            color: #c084fc;
+        }
+
+        pre .s {
+            color: #86efac;
+        }
+
+        pre .n {
+            color: #67e8f9;
+        }
+
+        pre .ns {
+            color: #fbbf24;
+        }
+
+        pre .m {
+            color: #fb923c;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--muted);
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: inherit;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: rgba(123, 97, 255, 0.2);
+            color: #c4b5fd;
+            border-color: var(--accent);
+        }
+
+        .copy-btn.copied {
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        /* ── RESPONSE BADGE ── */
+        .response-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border2);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .status-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .s200 {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+        }
+
+        .s202 {
+            background: rgba(59, 130, 246, 0.12);
+            color: #60a5fa;
+        }
+
+        .s400 {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .s401 {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+        }
+
+        .s429 {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+        }
+
+        .response-desc {
+            font-size: 12.5px;
+            color: var(--muted2);
+        }
+
+        /* ── INFO BOXES ── */
+        .info-box {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .info-box.note {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--muted2);
+        }
+
+        .info-box.tip {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: var(--muted2);
+        }
+
+        .info-box.warn {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            color: var(--muted2);
+        }
+
+        .info-box .icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── KEY TABLE ── */
+        .key-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
             margin: 16px 0;
         }
 
-        .v-split-full {
-            grid-template-columns: 1fr;
-        }
-
-        /* ── Playground ── */
-        .playground {
-            background: linear-gradient(135deg, rgba(123, 97, 255, 0.08), rgba(6, 182, 212, 0.05));
-            border: 1px solid rgba(123, 97, 255, 0.25);
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 36px;
-        }
-
-        .playground h2 {
-            margin-top: 0;
-            font-size: 18px;
-        }
-
-        .pg-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .pg-grid-2 {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .play-select,
-        .play-input {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #d1d4dc;
-            border-radius: 8px;
-            padding: 8px 11px;
-            font-size: 13px;
-            width: 100%;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color .2s;
-            font-family: inherit;
-        }
-
-        .play-select:focus,
-        .play-input:focus {
-            border-color: rgba(123, 97, 255, 0.6);
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, #7b61ff, #06b6d4);
-            border: none;
-            color: #fff;
-            padding: 9px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: opacity .2s;
-            width: 100%;
-        }
-
-        .play-btn:hover {
-            opacity: 0.85;
-        }
-
-        .play-btn:disabled {
-            opacity: 0.45;
-            cursor: wait;
-        }
-
-        label.play-label {
+        .key-table th {
+            text-align: left;
             font-size: 11px;
-            color: #787b86;
-            margin-bottom: 4px;
-            display: block;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
         }
 
-        .indicator-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            margin-top: 8px;
+        .key-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border2);
+            color: var(--muted2);
+            font-size: 13px;
         }
 
-        .ind-pill {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        .key-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tier-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 9px;
             border-radius: 20px;
-            padding: 3px 11px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all .15s;
-            user-select: none;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .ind-pill.selected {
-            background: rgba(123, 97, 255, 0.25);
-            border-color: #7b61ff;
+        .tier-basic {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .tier-pro {
+            background: rgba(123, 97, 255, 0.15);
+            color: #a78bfa;
+        }
+
+        .tier-ultra {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        /* ── INLINE CODE ── */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 2px 6px;
+            border-radius: 4px;
             color: #c4b5fd;
         }
 
-        .play-preview {
-            background: #0e1117;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            min-height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-top: 14px;
+        /* ── DIVIDER ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
         }
 
-        .play-preview img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            display: block;
-        }
+        /* ── SCROLLSPY HIGHLIGHT ── */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
 
-        .play-placeholder {
-            color: #4a5568;
-            font-size: 13px;
-            text-align: center;
-            padding: 30px;
-        }
-
-        .play-placeholder span {
-            font-size: 30px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .play-url-display {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 7px;
-            padding: 8px 12px;
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            color: #787b86;
-            margin-top: 10px;
-            word-break: break-all;
-        }
-
-        .play-url-display span {
-            color: #7b61ff;
-        }
-
-        .docs-content section {
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 36px;
-        }
-
-        .docs-content section:last-child {
-            border-bottom: none;
+            .docs-main {
+                padding: 32px 20px;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
-    <nav class="navbar">
-        <a class="navbar-brand" href="/">
-            <div class="navbar-logo">C</div>
-            <span class="navbar-name">Chart<span>Snap</span></span>
+    <!-- TOP NAV -->
+    <nav class="topnav">
+        <a class="brand" href="/">
+            <div class="brand-logo">C</div>
+            ChartSnap
         </a>
-        <div class="navbar-nav">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="/#pricing">Pricing</a>
-            <a class="nav-link" href="/chart-builder.html">Chart Builder</a>
-            <a class="nav-link" href="/dashboard.html">Dashboard</a>
+        <div class="topnav-links">
+            <a href="/">Home</a>
+            <a href="/docs.html" class="active">API Docs</a>
+            <a href="/chart-builder.html">Chart Builder</a>
+            <a href="/dashboard.html">Dashboard</a>
         </div>
-        <div class="navbar-actions">
-            <button class="btn btn-primary btn-sm"
-                onclick="document.getElementById('register-modal').classList.add('open')">Get API Key →</button>
+        <div class="topnav-right">
+            <a class="btn-key" href="#authentication">Get API Key →</a>
         </div>
     </nav>
 
     <div class="docs-layout">
-        <!-- Sidebar -->
-        <aside class="docs-sidebar">
-            <div class="docs-sidebar-section">
-                <h4>Getting Started</h4>
-                <a class="docs-nav-link active" href="#playground">⚡ Playground</a>
-                <a class="docs-nav-link" href="#introduction">Introduction</a>
-                <a class="docs-nav-link" href="#authentication">Authentication</a>
-                <a class="docs-nav-link" href="#rate-limits">Rate Limits</a>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">Getting Started</div>
+                <a class="sidebar-link active" href="#overview">Overview</a>
+                <a class="sidebar-link" href="#authentication">Authentication</a>
+                <a class="sidebar-link" href="#rate-limits">Rate Limits</a>
             </div>
-            <div class="docs-sidebar-section">
-                <h4>API v1 — GET</h4>
-                <a class="docs-nav-link" href="#mini-chart">Mini Chart</a>
-                <a class="docs-nav-link" href="#advanced-v1">Advanced Chart</a>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">API V1 — GET</div>
+                <a class="sidebar-link" href="#v1-mini">
+                    <span class="method-badge badge-get">GET</span>
+                    Mini Chart
+                </a>
+                <a class="sidebar-link" href="#v1-advanced">
+                    <span class="method-badge badge-get">GET</span>
+                    Advanced Chart
+                </a>
             </div>
-            <div class="docs-sidebar-section">
-                <h4>API v2 — POST</h4>
-                <a class="docs-nav-link" href="#advanced-v2">Advanced Chart</a>
-                <a class="docs-nav-link" href="#storage">Save to Storage</a>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">API V2 — POST</div>
+                <a class="sidebar-link" href="#v2-advanced">
+                    <span class="method-badge badge-post">POST</span>
+                    Advanced Chart
+                </a>
+                <a class="sidebar-link" href="#v2-storage">
+                    <span class="method-badge badge-post">POST</span>
+                    Save to Storage
+                </a>
             </div>
-            <div class="docs-sidebar-section">
-                <h4>API v3 — Data</h4>
-                <a class="docs-nav-link" href="#exchange">Exchange List</a>
-                <a class="docs-nav-link" href="#symbols">Exchange Symbols</a>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">TradingView Layout</div>
+                <a class="sidebar-link" href="#layout-render">
+                    <span class="method-badge badge-post">POST</span>
+                    Layout Render
+                </a>
+                <a class="sidebar-link" href="#job-status">
+                    <span class="method-badge badge-get">GET</span>
+                    Job Status
+                </a>
             </div>
-            <div class="docs-sidebar-section">
-                <h4>Reference</h4>
-                <a class="docs-nav-link" href="#chart-styles">Chart Styles</a>
-                <a class="docs-nav-link" href="#indicators">Indicators</a>
-                <a class="docs-nav-link" href="#errors">Error Codes</a>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">V3 — Data</div>
+                <a class="sidebar-link" href="#v3-exchanges">
+                    <span class="method-badge badge-get">GET</span>
+                    Exchange List
+                </a>
+                <a class="sidebar-link" href="#v3-symbols">
+                    <span class="method-badge badge-get">GET</span>
+                    Symbol Search
+                </a>
             </div>
-            <div class="docs-sidebar-section">
-                <h4>Account</h4>
-                <a class="docs-nav-link" href="#register-api">Register</a>
-                <a class="docs-nav-link" href="#key-info">Key Info</a>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-label">Reference</div>
+                <a class="sidebar-link" href="#intervals">Intervals</a>
+                <a class="sidebar-link" href="#error-codes">Error Codes</a>
             </div>
         </aside>
 
-        <!-- Content -->
-        <main class="docs-content" id="docs-main" style="padding-top:100px">
+        <!-- MAIN CONTENT -->
+        <main class="docs-main">
 
-            <!-- ─── Playground ─────────────────────────────────────────────── -->
-            <section id="playground">
-                <div class="playground">
-                    <h2>⚡ Interactive Playground</h2>
-                    <p style="color:#787b86;margin-top:0;margin-bottom:20px;font-size:14px">Build and preview chart API
-                        requests live — no code needed.</p>
+            <!-- OVERVIEW -->
+            <section class="doc-section" id="overview">
+                <div class="section-eyebrow">Getting Started</div>
+                <h1 class="section-title">ChartSnap API</h1>
+                <p class="section-desc">
+                    Generate high-quality trading chart images programmatically. Request PNG/JPEG screenshots of any
+                    chart — crypto, stocks, indices — via a simple REST API. No browser required.
+                </p>
 
-                    <div class="playground-grid">
-                        <div>
-                            <label class="play-label">Symbol</label>
-                            <input class="play-input" id="pl-symbol" value="BINANCE:BTCUSDT"
-                                placeholder="e.g. BINANCE:BTCUSDT">
-                        </div>
-                        <div>
-                            <label class="play-label">Interval</label>
-                            <select class="play-select" id="pl-interval">
-                                <option>1m</option>
-                                <option>5m</option>
-                                <option>15m</option>
-                                <option>1h</option>
-                                <option>4h</option>
-                                <option value="1D" selected>1D</option>
-                                <option>1W</option>
-                                <option>1M</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="play-label">Chart Style</label>
-                            <select class="play-select" id="pl-style">
-                                <option value="candle" selected>candle</option>
-                                <option value="line">line</option>
-                                <option value="area">area</option>
-                                <option value="heikinAshi">heikinAshi</option>
-                                <option value="bar">bar</option>
-                            </select>
-                        </div>
+                <div class="info-box note">
+                    <span class="icon">💡</span>
+                    <div>Base URL: <code>https://api.chartsnap.io</code> &nbsp;·&nbsp; All endpoints require an API key.
+                        &nbsp;·&nbsp; All responses are <code>application/json</code> unless returning a binary image.
                     </div>
+                </div>
 
-                    <div class="playground-grid">
-                        <div>
-                            <label class="play-label">Theme</label>
-                            <select class="play-select" id="pl-theme">
-                                <option value="dark" selected>dark</option>
-                                <option value="light">light</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="play-label">Width × Height</label>
-                            <select class="play-select" id="pl-size">
-                                <option value="800x600" selected>800 × 600</option>
-                                <option value="900x500">900 × 500</option>
-                                <option value="1200x700">1200 × 700</option>
-                            </select>
-                        </div>
-                        <div style="display:flex;align-items:flex-end">
-                            <button class="play-btn" style="width:100%" onclick="runPlayground()" id="pl-btn">▶ Generate
-                                Chart</button>
-                        </div>
+                <div class="endpoint-card">
+                    <div class="endpoint-header" style="cursor:default;">
+                        <div style="font-size:13px;color:var(--muted2);">Quick start — generate a BTC/USDT daily chart
+                            in one line:</div>
                     </div>
-
-                    <div>
-                        <label class="play-label">Indicators (click to toggle)</label>
-                        <div class="indicator-pills">
-                            <span class="ind-pill" data-study="Relative Strength Index">RSI</span>
-                            <span class="ind-pill" data-study="MACD">MACD</span>
-                            <span class="ind-pill" data-study="Bollinger Bands">Bollinger Bands</span>
-                            <span class="ind-pill" data-study="Moving Average">SMA</span>
-                            <span class="ind-pill" data-study="Moving Average Exponential">EMA</span>
-                            <span class="ind-pill" data-study="Volume">Volume</span>
-                        </div>
+                    <div class="code-panel active">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre>curl "https://api.chartsnap.io/v1/tradingview/advanced-chart<span class="n">?symbol=BINANCE:BTCUSDT&interval=1D&key=YOUR_KEY</span>" \
+     --output btc_chart.png</pre>
                     </div>
-
-                    <div class="play-preview" id="pl-preview">
-                        <div class="play-placeholder"><span>📊</span>Click <strong>Generate Chart</strong> to see a live
-                            preview</div>
-                    </div>
-                    <div class="play-url-display" id="pl-url" style="display:none"></div>
                 </div>
             </section>
 
-            <!-- ─── Introduction ───────────────────────────────────────────── -->
-            <section id="introduction">
-                <h1>ChartSnap API Documentation</h1>
-                <p>ChartSnap generates high-quality chart images from real market data via a simple REST API — ideal for
-                    trading bots, alert systems, portfolio dashboards, and fintech apps.</p>
-                <p>To get started, <a href="/dashboard.html" style="color:var(--accent-purple)">register for a free API
-                        key</a>. The BASIC tier includes 50 requests/day at no cost.</p>
+            <!-- AUTHENTICATION -->
+            <section class="doc-section" id="authentication">
+                <div class="section-eyebrow">Authentication</div>
+                <h2 class="section-title">API Keys</h2>
+                <p class="section-desc">All requests must include your API key. Three supported methods — the header is
+                    preferred.</p>
 
-                <table class="param-table" style="margin-top:20px">
+                <table class="params-table" style="margin-bottom:20px;">
                     <thead>
                         <tr>
-                            <th>Version</th>
                             <th>Method</th>
-                            <th>Use Case</th>
+                            <th>Example</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="param-name">v1</span></td>
-                            <td>GET</td>
-                            <td>Simple URL-based chart generation — easy to embed anywhere</td>
+                            <td class="param-name">x-api-key header <span class="required-tag">recommended</span></td>
+                            <td class="param-type">x-api-key: cs_live_xxxx</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">v2</span></td>
-                            <td>POST</td>
-                            <td>Full JSON config — multiple indicators, styles, save to storage</td>
+                            <td class="param-name">Authorization header</td>
+                            <td class="param-type">Authorization: Bearer cs_live_xxxx</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">v3</span></td>
-                            <td>GET</td>
-                            <td>Data endpoints — lookup exchanges and symbols</td>
+                            <td class="param-name">Query param</td>
+                            <td class="param-type">?key=cs_live_xxxx</td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
 
-            <!-- ─── Authentication ─────────────────────────────────────────── -->
-            <section id="authentication">
-                <h2>Authentication 🔒</h2>
-                <p>All API endpoints require authentication. Include your API key using any of these methods:</p>
-                <h3>Method 1 — x-api-key Header (Recommended)</h3>
-                <pre><code>x-api-key: YOUR_API_KEY</code></pre>
-                <h3>Method 2 — Authorization Bearer</h3>
-                <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
-                <h3>Method 3 — Query Parameter</h3>
-                <pre><code>GET /v1/tradingview/mini-chart?key=YOUR_API_KEY</code></pre>
-            </section>
-
-            <!-- ─── Rate Limits ─────────────────────────────────────────────── -->
-            <section id="rate-limits">
-                <h2>Rate Limits ⚠️</h2>
-                <p>Limits are applied per API key, per day. All times reset at midnight UTC.</p>
-                <table class="param-table" style="margin-top:16px">
+                <table class="key-table">
                     <thead>
                         <tr>
                             <th>Tier</th>
-                            <th>Daily Limit</th>
-                            <th>Rate (req/sec)</th>
-                            <th>Max Resolution</th>
-                            <th>Max Indicators</th>
+                            <th>Daily Renders</th>
+                            <th>Req/sec</th>
+                            <th>Storage</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>BASIC</td>
-                            <td>50</td>
-                            <td>1</td>
-                            <td>800×600</td>
-                            <td>3</td>
+                            <td><span class="tier-badge tier-basic">BASIC</span></td>
+                            <td>100 / day</td>
+                            <td>1 rps</td>
+                            <td>—</td>
                         </tr>
                         <tr>
-                            <td>PRO</td>
-                            <td>500</td>
-                            <td>10</td>
-                            <td>1920×1080</td>
-                            <td>5</td>
+                            <td><span class="tier-badge tier-pro">PRO</span></td>
+                            <td>1,000 / day</td>
+                            <td>5 rps</td>
+                            <td>✓ 7d</td>
                         </tr>
                         <tr>
-                            <td>MEGA</td>
-                            <td>1,000</td>
-                            <td>15</td>
-                            <td>1920×1600</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>ULTRA</td>
-                            <td>3,000</td>
-                            <td>35</td>
-                            <td>2048×1920</td>
-                            <td>25</td>
+                            <td><span class="tier-badge tier-ultra">ULTRA</span></td>
+                            <td>10,000 / day</td>
+                            <td>20 rps</td>
+                            <td>✓ 30d</td>
                         </tr>
                     </tbody>
                 </table>
-                <p>When limits are exceeded, the API returns HTTP <code>429</code> with a JSON error body.</p>
             </section>
 
-            <!-- ─── Base URL ────────────────────────────────────────────────── -->
-            <section id="base-url">
-                <h2>Base URL 🔗</h2>
-                <pre><code>http://localhost:3000</code></pre>
-                <p>All API endpoints are relative to this base URL. Replace with your deployed server URL in production.
-                </p>
-                <p style="font-size:13px;margin-top:8px">💡 <strong>Indian devs:</strong> The API server can be deployed
-                    on a ₹500/month VPS (Contabo, Hostinger, or Digital Ocean) — costs far less than premium chart APIs
-                    billed in USD.</p>
+            <hr class="divider">
+
+            <!-- V1 MINI CHART -->
+            <section class="doc-section" id="v1-mini">
+                <div class="section-eyebrow">API V1 — GET</div>
+                <h2 class="section-title">Mini Chart</h2>
+                <p class="section-desc">Returns a compact sparkline-style chart as a PNG image. Best for embedding small
+                    thumbnails in bots or alerts.</p>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header" style="cursor:default;">
+                        <span class="method-pill method-get">GET</span>
+                        <span class="endpoint-path">/v1/tradingview/mini-chart</span>
+                        <span class="endpoint-summary">Returns PNG directly</span>
+                    </div>
+
+                    <div class="params-section">
+                        <div class="params-label">Parameters</div>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">symbol</span><span class="required-tag">required</span>
+                                    </td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td>—</td>
+                                    <td class="param-desc">TradingView symbol e.g. <code>BINANCE:BTCUSDT</code>,
+                                        <code>NSE:RELIANCE</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">interval</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td><span class="param-default">1D</span></td>
+                                    <td class="param-desc">Timeframe: <code>1m</code> <code>5m</code> <code>15m</code>
+                                        <code>1h</code> <code>4h</code> <code>1D</code> <code>1W</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">width</span><span class="optional-tag">optional</span>
+                                    </td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td><span class="param-default">400</span></td>
+                                    <td class="param-desc">Output width in pixels (max 2048)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">height</span><span class="optional-tag">optional</span>
+                                    </td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td><span class="param-default">200</span></td>
+                                    <td class="param-desc">Output height in pixels (max 2048)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">key</span><span class="required-tag">required</span>
+                                    </td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td>—</td>
+                                    <td class="param-desc">Your API key</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="code-wrap">
+                        <div class="code-tabs-row">
+                            <div class="code-tab active" onclick="switchTab(this,'curl-mini')">cURL</div>
+                            <div class="code-tab" onclick="switchTab(this,'py-mini')">Python</div>
+                            <div class="code-tab" onclick="switchTab(this,'js-mini')">JavaScript</div>
+                        </div>
+                        <div class="code-panel active" id="curl-mini">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>curl <span class="s">"http://localhost:3000/v1/tradingview/mini-chart?symbol=NSE:BANKNIFTY&interval=1D&key=demo-key-basic-001"</span> \
+     --output banknifty_mini.png</pre>
+                        </div>
+                        <div class="code-panel" id="py-mini">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="k">import</span> requests
+
+resp = requests.get(<span class="s">"http://localhost:3000/v1/tradingview/mini-chart"</span>, params={
+    <span class="s">"symbol"</span>: <span class="s">"NSE:BANKNIFTY"</span>,
+    <span class="s">"interval"</span>: <span class="s">"1D"</span>,
+    <span class="s">"key"</span>: <span class="s">"demo-key-basic-001"</span>
+})
+<span class="k">open</span>(<span class="s">"chart.png"</span>, <span class="s">"wb"</span>).write(resp.content)</pre>
+                        </div>
+                        <div class="code-panel" id="js-mini">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">`http://localhost:3000/v1/tradingview/mini-chart?symbol=NSE:BANKNIFTY&interval=1D&key=demo-key-basic-001`</span>);
+<span class="k">const</span> blob = <span class="k">await</span> res.blob();
+<span class="c">// Use blob as image source in your bot/app</span></pre>
+                        </div>
+                    </div>
+
+                    <div class="response-row">
+                        <span class="status-pill s200">200</span>
+                        <span class="response-desc">Returns PNG binary — set <code>Content-Type: image/png</code></span>
+                    </div>
+                </div>
             </section>
 
-            <!-- ─── Mini Chart ─────────────────────────────────────────────── -->
-            <section id="mini-chart">
-                <h2>Mini Chart</h2>
-                <p>Generates a compact sparkline area chart — shows the price trend, current price, and % change over
-                    the period. Great for embedding in Telegram alerts, portfolio dashboards, or stock screener results.
+            <!-- V1 ADVANCED CHART -->
+            <section class="doc-section" id="v1-advanced">
+                <div class="section-eyebrow">API V1 — GET</div>
+                <h2 class="section-title">Advanced Chart</h2>
+                <p class="section-desc">Returns a full-size OHLCV candlestick chart rendered with real market data.
+                    Supports all major exchanges and timeframes.</p>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header" style="cursor:default;">
+                        <span class="method-pill method-get">GET</span>
+                        <span class="endpoint-path">/v1/tradingview/advanced-chart</span>
+                        <span class="endpoint-summary">Returns PNG directly</span>
+                    </div>
+
+                    <div class="params-section">
+                        <div class="params-label">Parameters</div>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">symbol</span><span class="required-tag">required</span>
+                                    </td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td>—</td>
+                                    <td class="param-desc">Exchange:Ticker e.g. <code>BINANCE:BTCUSDT</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">interval</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td><span class="param-default">1D</span></td>
+                                    <td class="param-desc">Timeframe — see Intervals reference</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">width</span><span class="optional-tag">optional</span>
+                                    </td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td><span class="param-default">800</span></td>
+                                    <td class="param-desc">Output width (px)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">height</span><span class="optional-tag">optional</span>
+                                    </td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td><span class="param-default">600</span></td>
+                                    <td class="param-desc">Output height (px)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="code-wrap">
+                        <div class="code-tabs-row">
+                            <div class="code-tab active" onclick="switchTab(this,'curl-adv')">cURL</div>
+                            <div class="code-tab" onclick="switchTab(this,'py-adv')">Python</div>
+                        </div>
+                        <div class="code-panel active" id="curl-adv">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>curl <span class="s">"http://localhost:3000/v1/tradingview/advanced-chart?symbol=BINANCE:BTCUSDT&interval=4h&width=1280&height=720&key=demo-key-basic-001"</span> \
+     --output btc_4h.png</pre>
+                        </div>
+                        <div class="code-panel" id="py-adv">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre>resp = requests.get(<span class="s">"http://localhost:3000/v1/tradingview/advanced-chart"</span>, params={
+    <span class="s">"symbol"</span>: <span class="s">"BINANCE:BTCUSDT"</span>, <span class="s">"interval"</span>: <span class="s">"4h"</span>,
+    <span class="s">"width"</span>: <span class="m">1280</span>, <span class="s">"height"</span>: <span class="m">720</span>, <span class="s">"key"</span>: <span class="s">"demo-key-basic-001"</span>
+})
+<span class="k">open</span>(<span class="s">"chart.png"</span>, <span class="s">"wb"</span>).write(resp.content)</pre>
+                        </div>
+                    </div>
+                    <div class="response-row">
+                        <span class="status-pill s200">200</span>
+                        <span class="response-desc">PNG binary image</span>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="divider">
+
+            <!-- LAYOUT RENDER -->
+            <section class="doc-section" id="layout-render">
+                <div class="section-eyebrow">TradingView Layout</div>
+                <h2 class="section-title">Layout Render</h2>
+                <p class="section-desc">
+                    Capture a screenshot of your own <strong>saved TradingView layout</strong> — including all custom
+                    indicators, drawings, and panel arrangements. The render is processed asynchronously and you poll
+                    for the result.
                 </p>
-                <p style="font-size:13px">🇮🇳 <strong>Indian use case:</strong> Send a mini chart of RELIANCE or NIFTY
-                    to your Telegram group every morning at 9:15 AM IST market open.</p>
-                <div class="endpoint-pill method-get"><span class="method-label">GET</span><span
-                        class="method-path">/v1/tradingview/mini-chart</span></div>
 
-                <h3>Request Examples</h3>
-                <div class="code-tabs" id="tabs-mini">
-                    <div class="code-tab active" onclick="switchTab('mini','curl',this)">cURL</div>
-                    <div class="code-tab" onclick="switchTab('mini','js',this)">JavaScript</div>
-                    <div class="code-tab" onclick="switchTab('mini','python',this)">Python</div>
+                <div class="info-box tip">
+                    <span class="icon">🔗</span>
+                    <div>Get your Layout ID from the share URL:
+                        <code>tradingview.com/chart/<strong>hMZXawOv</strong>/</code> — the bolded part is your layout
+                        ID.</div>
                 </div>
-                <div class="code-panel active" id="mini-curl">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code># NSE Reliance Industries — daily mini chart
-curl "http://localhost:3000/v1/tradingview/mini-chart?symbol=NSE:RELIANCE&interval=1D&theme=dark&key=YOUR_KEY" \
-  -o reliance.png
 
-# NIFTY Bank Index — weekly chart
-curl "http://localhost:3000/v1/tradingview/mini-chart?symbol=NSE:BANKNIFTY&interval=1W&theme=dark&key=YOUR_KEY" \
-  -o banknifty.png
+                <div class="endpoint-card">
+                    <div class="endpoint-header" style="cursor:default;">
+                        <span class="method-pill method-post">POST</span>
+                        <span class="endpoint-path">/v1/renders</span>
+                        <span class="endpoint-summary">Queues a render job → returns job ID</span>
+                    </div>
 
-# Bitcoin (crypto)
-curl "http://localhost:3000/v1/tradingview/mini-chart?symbol=BINANCE:BTCUSDT&interval=1D&theme=dark&key=YOUR_KEY" \
-  -o btc.png</code></pre>
+                    <div class="params-section">
+                        <div class="params-label">Request Body (JSON)</div>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">engine</span><span class="required-tag">required</span>
+                                    </td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td class="param-desc">Use <code>"tradingview_layout"</code> for layout renders</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">data.layout</span><span
+                                            class="required-tag">required</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td class="param-desc">Your TradingView layout ID (from share URL)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">data.symbol</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td class="param-desc">Override the symbol shown in the layout</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">data.interval</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td class="param-desc">Override the timeframe e.g. <code>"1D"</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">output.format</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">string</span></td>
+                                    <td class="param-desc"><code>"png"</code> (default) or <code>"jpeg"</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">output.width</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td class="param-desc">Screenshot width (default: <code>1200</code>)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">output.height</span><span
+                                            class="optional-tag">optional</span></td>
+                                    <td><span class="param-type">integer</span></td>
+                                    <td class="param-desc">Screenshot height (default: <code>630</code>)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="code-wrap">
+                        <div class="code-tabs-row">
+                            <div class="code-tab active" onclick="switchTab(this,'curl-layout')">cURL</div>
+                            <div class="code-tab" onclick="switchTab(this,'py-layout')">Python</div>
+                            <div class="code-tab" onclick="switchTab(this,'js-layout')">JavaScript</div>
+                        </div>
+                        <div class="code-panel active" id="curl-layout">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="c"># Step 1: Queue the render</span>
+curl -X POST <span class="s">"http://localhost:3000/v1/renders"</span> \
+  -H <span class="s">"Authorization: Bearer YOUR_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "engine": "tradingview_layout",
+    "data": { "layout": "hMZXawOv", "interval": "1D" },
+    "output": { "format": "png", "width": 1200, "height": 630 }
+  }'</span>
+<span class="c"># → {"job_id": "job_abc123...", "status": "queued"}</span>
+
+<span class="c"># Step 2: Poll until done</span>
+curl <span class="s">"http://localhost:3000/v1/jobs/job_abc123"</span> \
+  -H <span class="s">"Authorization: Bearer YOUR_KEY"</span>
+<span class="c"># → {"status": "succeeded", "artifacts": {"cdn_url": "/v1/jobs/job_abc123/result"}}</span>
+
+<span class="c"># Step 3: Download the image</span>
+curl <span class="s">"http://localhost:3000/v1/jobs/job_abc123/result"</span> \
+  -H <span class="s">"Authorization: Bearer YOUR_KEY"</span> --output layout.png</pre>
+                        </div>
+                        <div class="code-panel" id="py-layout">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="k">import</span> requests, time
+
+headers = {<span class="s">"Authorization"</span>: <span class="s">"Bearer YOUR_KEY"</span>}
+BASE = <span class="s">"http://localhost:3000"</span>
+
+<span class="c"># 1. Queue job</span>
+r = requests.post(<span class="s">f"{BASE}/v1/renders"</span>, headers=headers, json={
+    <span class="s">"engine"</span>: <span class="s">"tradingview_layout"</span>,
+    <span class="s">"data"</span>: {<span class="s">"layout"</span>: <span class="s">"hMZXawOv"</span>, <span class="s">"interval"</span>: <span class="s">"1D"</span>},
+    <span class="s">"output"</span>: {<span class="s">"format"</span>: <span class="s">"png"</span>, <span class="s">"width"</span>: <span class="m">1200</span>, <span class="s">"height"</span>: <span class="m">630</span>}
+})
+job_id = r.json()[<span class="s">"job_id"</span>]
+
+<span class="c"># 2. Poll</span>
+<span class="k">while True</span>:
+    status = requests.get(<span class="s">f"{BASE}/v1/jobs/{job_id}"</span>, headers=headers).json()
+    <span class="k">if</span> status[<span class="s">"status"</span>] == <span class="s">"succeeded"</span>: <span class="k">break</span>
+    time.sleep(<span class="m">2</span>)
+
+<span class="c"># 3. Download</span>
+img = requests.get(<span class="s">f"{BASE}{status['artifacts']['cdn_url']}"</span>, headers=headers)
+<span class="k">open</span>(<span class="s">"layout.png"</span>, <span class="s">"wb"</span>).write(img.content)</pre>
+                        </div>
+                        <div class="code-panel" id="js-layout">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="k">const</span> BASE = <span class="s">"http://localhost:3000"</span>;
+<span class="k">const</span> KEY = <span class="s">"YOUR_KEY"</span>;
+<span class="k">const</span> headers = { Authorization: <span class="s">`Bearer ${KEY}`</span>, <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> };
+
+<span class="c">// 1. Queue</span>
+<span class="k">const</span> { job_id } = <span class="k">await</span> fetch(<span class="s">`${BASE}/v1/renders`</span>, {
+  method: <span class="s">"POST"</span>, headers,
+  body: JSON.stringify({ engine: <span class="s">"tradingview_layout"</span>, data: { layout: <span class="s">"hMZXawOv"</span> }, output: { width: <span class="m">1200</span>, height: <span class="m">630</span> } })
+}).then(r => r.json());
+
+<span class="c">// 2. Poll every 2s</span>
+<span class="k">let</span> job;
+<span class="k">do</span> {
+  <span class="k">await</span> <span class="k">new</span> Promise(r => setTimeout(r, <span class="m">2000</span>));
+  job = <span class="k">await</span> fetch(<span class="s">`${BASE}/v1/jobs/${job_id}`</span>, { headers }).then(r => r.json());
+} <span class="k">while</span> (job.status === <span class="s">"queued"</span> || job.status === <span class="s">"rendering"</span>);
+
+<span class="c">// 3. Use the image URL</span>
+console.log(<span class="s">`${BASE}${job.artifacts.cdn_url}`</span>);</pre>
+                        </div>
+                    </div>
+
+                    <div class="response-row">
+                        <span class="status-pill s202">202</span>
+                        <span
+                            class="response-desc"><code>{"job_id":"job_abc123","status":"queued","links":{"self":"/v1/jobs/job_abc123"}}</code></span>
                     </div>
                 </div>
-                <div class="code-panel" id="mini-js">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>// Indian stock mini chart — NSE:TCS
-const url = 'http://localhost:3000/v1/tradingview/mini-chart'
-  + '?symbol=NSE:TCS&interval=1D&theme=dark&key=YOUR_KEY';
+            </section>
 
-const res = await fetch(url);
-const blob = await res.blob();
-const imgUrl = URL.createObjectURL(blob);
+            <!-- JOB STATUS -->
+            <section class="doc-section" id="job-status">
+                <div class="section-eyebrow">TradingView Layout</div>
+                <h2 class="section-title">Job Status</h2>
+                <p class="section-desc">Poll this endpoint after queuing a render job. Typical layout renders complete
+                    in 6–15 seconds.</p>
 
-// Send to Telegram bot:
-// await bot.sendPhoto(chatId, Buffer.from(await res.arrayBuffer()));</code></pre>
+                <div class="endpoint-card">
+                    <div class="endpoint-header" style="cursor:default;">
+                        <span class="method-pill method-get">GET</span>
+                        <span class="endpoint-path">/v1/jobs/:job_id</span>
+                    </div>
+                    <div class="code-wrap">
+                        <div class="code-panel active">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><span class="c"># Pending</span>
+{ <span class="s">"job_id"</span>: <span class="s">"job_abc123"</span>, <span class="s">"status"</span>: <span class="s">"queued"</span> }
+
+<span class="c"># Completed</span>
+{
+  <span class="s">"job_id"</span>: <span class="s">"job_abc123"</span>,
+  <span class="s">"status"</span>: <span class="s">"succeeded"</span>,
+  <span class="s">"artifacts"</span>: {
+    <span class="s">"cdn_url"</span>: <span class="s">"/v1/jobs/job_abc123/result"</span>,
+    <span class="s">"expires_at"</span>: <span class="s">"2026-04-06T00:00:00Z"</span>
+  }
+}</pre>
+                        </div>
+                    </div>
+                    <div class="response-row">
+                        <span class="status-pill s200">200</span>
+                        <span class="response-desc">Job object with status: <code>queued</code> | <code>rendering</code>
+                            | <code>succeeded</code> | <code>failed</code></span>
                     </div>
                 </div>
-                <div class="code-panel" id="mini-python">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>import requests
+            </section>
 
-# Zerodha / Upstox trading bot — send chart on signal
-symbols = ["NSE:RELIANCE", "NSE:TCS", "NSE:INFY", "NSE:HDFCBANK"]
+            <hr class="divider">
 
-for symbol in symbols:
-    res = requests.get(
-        "http://localhost:3000/v1/tradingview/mini-chart",
-        params={"symbol": symbol, "interval": "1D", "theme": "dark", "key": "YOUR_KEY"}
-    )
-    with open(f"{symbol.replace(':', '_')}.png", "wb") as f:
-        f.write(res.content)</code></pre>
-                    </div>
+            <!-- RATE LIMITS -->
+            <section class="doc-section" id="rate-limits">
+                <div class="section-eyebrow">Reference</div>
+                <h2 class="section-title">Rate Limits</h2>
+                <p class="section-desc">Rate limits are enforced per API key using a token bucket algorithm. When
+                    exceeded, a <code>429</code> response is returned with a <code>Retry-After</code> header.</p>
+
+                <div class="info-box warn">
+                    <span class="icon">⚠️</span>
+                    <div>For layout renders (async), set your timeout to at least <strong>60 seconds</strong> when
+                        polling. TradingView charts with many indicators can take 10–25 seconds to render fully.</div>
                 </div>
+            </section>
 
-                <h3>Query Parameters</h3>
-                <table class="param-table">
+            <!-- INTERVALS -->
+            <section class="doc-section" id="intervals">
+                <div class="section-eyebrow">Reference</div>
+                <h2 class="section-title">Intervals</h2>
+                <table class="params-table">
                     <thead>
                         <tr>
-                            <th>Parameter</th>
-                            <th>Required</th>
-                            <th>Default</th>
+                            <th>Value</th>
+                            <th>Label</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">1m</td>
+                            <td>1 minute</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">5m</td>
+                            <td>5 minutes</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">15m</td>
+                            <td>15 minutes</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">30m</td>
+                            <td>30 minutes</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">1h</td>
+                            <td>1 hour</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">4h</td>
+                            <td>4 hours</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">1D</td>
+                            <td>Daily</td>
+                            <td class="param-desc">Most popular</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">1W</td>
+                            <td>Weekly</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">1M</td>
+                            <td>Monthly</td>
+                            <td class="param-desc">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ERROR CODES -->
+            <section class="doc-section" id="error-codes">
+                <div class="section-eyebrow">Reference</div>
+                <h2 class="section-title">Error Codes</h2>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Code</th>
                             <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="param-name">key</span></td>
-                            <td><span class="param-required">required</span></td>
-                            <td>—</td>
-                            <td>Your API key (or use <code>x-api-key</code> header)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">symbol</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>BINANCE:BTCUSDT</td>
-                            <td>Exchange:Symbol — e.g. <code>NSE:RELIANCE</code>, <code>BSE:SENSEX</code>,
-                                <code>BINANCE:BTCUSDT</code>, <code>NASDAQ:AAPL</code>
+                            <td><span class="status-pill s401" style="display:inline-block;font-size:11px;">401</span>
                             </td>
+                            <td class="param-name">UNAUTHORIZED</td>
+                            <td class="param-desc">Missing or invalid API key</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">interval</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>1D</td>
-                            <td>1m, 5m, 15m, 30m, 1h, 4h, 1D, 1W, 1M</td>
+                            <td><span class="status-pill s429" style="display:inline-block;font-size:11px;">429</span>
+                            </td>
+                            <td class="param-name">RATE_LIMITED</td>
+                            <td class="param-desc">Too many requests — check <code>Retry-After</code> header</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">width</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>800</td>
-                            <td>Image width in pixels (tier limited)</td>
+                            <td><span class="status-pill s400" style="display:inline-block;font-size:11px;">400</span>
+                            </td>
+                            <td class="param-name">INVALID_SYMBOL</td>
+                            <td class="param-desc">Symbol format invalid — use EXCHANGE:TICKER</td>
                         </tr>
                         <tr>
-                            <td><span class="param-name">height</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>400</td>
-                            <td>Image height in pixels</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">theme</span></td>
-                            <td><span class="param-optional">optional</span></td>
-                            <td>dark</td>
-                            <td><code>dark</code> or <code>light</code></td>
+                            <td><span class="status-pill s400" style="display:inline-block;font-size:11px;">400</span>
+                            </td>
+                            <td class="param-name">RENDER_FAILED</td>
+                            <td class="param-desc">Layout URL unreachable or chart timed out</td>
                         </tr>
                     </tbody>
                 </table>
-
-                <h3>Live Output</h3>
-                <p>Returns <code>image/png</code> binary directly. Preview of real data:</p>
-                <div class="v-split">
-                    <div>
-                        <div class="chart-preview">
-                            <img src="/v1/tradingview/mini-chart?symbol=BINANCE:BTCUSDT&interval=1D&theme=dark&key=demo-key-basic-001"
-                                alt="BTC mini chart" loading="lazy">
-                        </div>
-                        <p class="chart-preview-caption">BINANCE:BTCUSDT · 1D · dark</p>
-                    </div>
-                    <div>
-                        <div class="chart-preview">
-                            <img src="/v1/tradingview/mini-chart?symbol=BINANCE:ETHUSDT&interval=4h&theme=light&key=demo-key-basic-001"
-                                alt="ETH mini chart light" loading="lazy">
-                        </div>
-                        <p class="chart-preview-caption">BINANCE:ETHUSDT · 4h · light</p>
-                    </div>
-                </div>
-            </section>
-
-            <div class="code-panel active" id="adv1-curl">
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># NSE Reliance — daily candles with RSI + Bollinger Bands
-curl "http://localhost:3000/v1/tradingview/advanced-chart\
-?symbol=NSE:RELIANCE&interval=1D&theme=dark\
-&studies=Relative+Strength+Index&studies=Bollinger+Bands&key=YOUR_KEY" -o reliance.png
-
-# NIFTY 50 Index — weekly candles
-curl "http://localhost:3000/v1/tradingview/advanced-chart\
-?symbol=NSE:NIFTY&interval=1W&style=candle&theme=dark&key=YOUR_KEY" -o nifty.png
-
-# Bitcoin — 4h Heikin Ashi with MACD
-curl "http://localhost:3000/v1/tradingview/advanced-chart\
-?symbol=BINANCE:BTCUSDT&interval=4h&style=heikinAshi&studies=MACD&key=YOUR_KEY" -o btc.png</code></pre>
-                </div>
-            </div>
-            <div class="code-panel" id="adv1-js">
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>// Telegram alert bot — on signal, send chart
-const symbols = ['NSE:INFY', 'NSE:TCS', 'NSE:HDFCBANK'];
-
-for (const symbol of symbols) {
-  const params = new URLSearchParams({
-    symbol, interval: '1D', theme: 'dark', key: 'YOUR_KEY'
-  });
-  params.append('studies', 'Relative Strength Index');
-  params.append('studies', 'Bollinger Bands');
-
-  const res = await fetch(`/v1/tradingview/advanced-chart?${params}`);
-  const buf = Buffer.from(await res.arrayBuffer());
-  await bot.sendPhoto(chatId, buf, { caption: `📊 ${symbol}` });
-}</code></pre>
-                </div>
-            </div>
-            <div class="code-panel" id="adv1-python">
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>import requests
-
-# Morning market scan — top NSE stocks
-stocks = [
-    "NSE:RELIANCE", "NSE:TCS", "NSE:INFY",
-    "NSE:HDFCBANK", "NSE:NIFTY", "NSE:BANKNIFTY"
-]
-
-for symbol in stocks:
-    res = requests.get(
-        "http://localhost:3000/v1/tradingview/advanced-chart",
-        params=[
-            ("symbol", symbol),
-            ("interval", "1D"),
-            ("studies", "Relative Strength Index"),
-            ("studies", "MACD"),
-            ("key", "YOUR_KEY"),
-        ]
-    )
-    with open(f"{symbol.replace(':', '_')}.png", "wb") as f:
-        f.write(res.content)
-    print(f"✅ Chart saved for {symbol}")</code></pre>
-                </div>
-            </div>
-            <div class="code-panel" id="adv1-js">
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>const params = new URLSearchParams({
-  symbol: 'BINANCE:BTCUSDT',
-  interval: '1D',
-  theme: 'dark',
-  key: 'YOUR_KEY'
-});
-params.append('studies', 'Relative Strength Index');
-params.append('studies', 'MACD');
-
-const res = await fetch(`/v1/tradingview/advanced-chart?${params}`);
-const blob = await res.blob();
-document.querySelector('img').src = URL.createObjectURL(blob);</code></pre>
-                </div>
-            </div>
-            <div class="code-panel" id="adv1-python">
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>import requests
-
-res = requests.get(
-    "http://localhost:3000/v1/tradingview/advanced-chart",
-    params=[
-        ("symbol", "BINANCE:BTCUSDT"),
-        ("interval", "1D"),
-        ("studies", "Relative Strength Index"),
-        ("studies", "MACD"),
-        ("key", "YOUR_KEY"),
-    ]
-)
-with open("btc.png", "wb") as f:
-    f.write(res.content)</code></pre>
-                </div>
-            </div>
-
-            <h3>Query Parameters</h3>
-            <table class="param-table">
-                <thead>
-                    <tr>
-                        <th>Parameter</th>
-                        <th>Required</th>
-                        <th>Default</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="param-name">key</span></td>
-                        <td><span class="param-required">required</span></td>
-                        <td>—</td>
-                        <td>API key</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">symbol</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>BINANCE:BTCUSDT</td>
-                        <td>TradingView symbol</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">interval</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>1D</td>
-                        <td>Chart interval</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">width</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>800</td>
-                        <td>Width in pixels</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">height</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>600</td>
-                        <td>Height in pixels</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">style</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>candle</td>
-                        <td>Chart style (see Chart Styles)</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">theme</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>dark</td>
-                        <td><code>dark</code> or <code>light</code></td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">studies</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>[]</td>
-                        <td>Indicator names (repeatable: &studies=RSI&studies=MACD)</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">timezone</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>Etc/UTC</td>
-                        <td>TradingView timezone identifier</td>
-                    </tr>
-                    <tr>
-                        <td><span class="param-name">format</span></td>
-                        <td><span class="param-optional">optional</span></td>
-                        <td>png</td>
-                        <td><code>png</code> or <code>jpeg</code></td>
-                    </tr>
-                </tbody>
-            </table>
-            </section>
-
-            <!-- ─── Advanced Chart v2 ──────────────────────────────────────── -->
-            <section id="advanced-v2">
-                <h2>Advanced Chart v2</h2>
-                <p>Enhanced advanced chart via POST with full JSON configuration. Supports indicators with custom
-                    inputs, chart drawings, price overrides, and per-study color customization.</p>
-                <div class="endpoint-pill method-post"><span class="method-label">POST</span><span
-                        class="method-path">/v2/tradingview/advanced-chart</span></div>
-
-                <h3>Request Header</h3>
-                <pre><code>x-api-key: YOUR_API_KEY
-Content-Type: application/json</code></pre>
-
-                <h3>Request Examples</h3>
-                <div class="code-tabs" id="tabs-adv2">
-                    <div class="code-tab active" onclick="switchTab('adv2','curl',this)">cURL</div>
-                    <div class="code-tab" onclick="switchTab('adv2','js',this)">JavaScript</div>
-                    <div class="code-tab" onclick="switchTab('adv2','python',this)">Python</div>
-                </div>
-                <div class="code-panel active" id="adv2-curl">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>curl -X POST "http://localhost:3000/v2/tradingview/advanced-chart" \
-  -H "x-api-key: YOUR_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "symbol": "BINANCE:ETHUSDT",
-    "interval": "4h",
-    "style": "candle",
-    "theme": "dark",
-    "studies": [
-      { "name": "Bollinger Bands" },
-      { "name": "MACD" },
-      { "name": "Relative Strength Index" }
-    ]
-  }' -o eth.png</code></pre>
-                    </div>
-                </div>
-                <div class="code-panel" id="adv2-js">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>const res = await fetch('/v2/tradingview/advanced-chart', {
-  method: 'POST',
-  headers: {
-    'x-api-key': 'YOUR_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    symbol: 'BINANCE:ETHUSDT',
-    interval: '4h',
-    style: 'candle',
-    theme: 'dark',
-    studies: [
-      { name: 'MACD' },
-      { name: 'Relative Strength Index' }
-    ]
-  })
-});
-const blob = await res.blob();
-document.querySelector('img').src = URL.createObjectURL(blob);</code></pre>
-                    </div>
-                </div>
-                <div class="code-panel" id="adv2-python">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code>import requests
-
-res = requests.post(
-    "http://localhost:3000/v2/tradingview/advanced-chart",
-    headers={"x-api-key": "YOUR_KEY"},
-    json={
-        "symbol": "BINANCE:ETHUSDT",
-        "interval": "4h",
-        "studies": [{"name": "MACD"}, {"name": "Relative Strength Index"}]
-    }
-)
-with open("eth.png", "wb") as f:
-    f.write(res.content)</code></pre>
-                    </div>
-                </div>
-
-                <h3>Request Body Parameters</h3>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="param-name">symbol</span></td>
-                            <td>string</td>
-                            <td>BINANCE:BTCUSDT</td>
-                            <td>TradingView symbol (EXCHANGE:SYMBOL)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">interval</span></td>
-                            <td>string</td>
-                            <td>1D</td>
-                            <td>1m, 5m, 15m, 30m, 1h, 4h, 1D, 1W, 1M, 3M...</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">width</span></td>
-                            <td>number</td>
-                            <td>800</td>
-                            <td>Width in pixels (tier limited)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">height</span></td>
-                            <td>number</td>
-                            <td>600</td>
-                            <td>Height in pixels (tier limited)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">style</span></td>
-                            <td>string</td>
-                            <td>candle</td>
-                            <td>bar, candle, line, area, heikinAshi, hollowCandle, baseline, hiLo, column</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">theme</span></td>
-                            <td>string</td>
-                            <td>dark</td>
-                            <td><code>dark</code> or <code>light</code></td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">format</span></td>
-                            <td>string</td>
-                            <td>png</td>
-                            <td><code>png</code> or <code>jpeg</code></td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">range</span></td>
-                            <td>string</td>
-                            <td>null</td>
-                            <td>1D, 5D, 1M, 3M, 6M, 1Y, 5Y, YTD, ALL</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">timezone</span></td>
-                            <td>string</td>
-                            <td>Etc/UTC</td>
-                            <td>IANA timezone identifier</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">session</span></td>
-                            <td>string</td>
-                            <td>regular</td>
-                            <td><code>regular</code> or <code>extended</code></td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">studies</span></td>
-                            <td>array</td>
-                            <td>[]</td>
-                            <td>Array of indicator objects (see below)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">drawings</span></td>
-                            <td>array</td>
-                            <td>[]</td>
-                            <td>Array of drawing objects (see Drawings)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">override</span></td>
-                            <td>object</td>
-                            <td>{}</td>
-                            <td>Global chart overrides (colors, labels, etc.)</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Live Output — POST Examples</h3>
-                <div class="v-split">
-                    <div>
-                        <div class="chart-preview">
-                            <img src="/v1/tradingview/advanced-chart?symbol=BINANCE:SOLUSDT&interval=1D&theme=dark&style=area&key=demo-key-pro-001"
-                                alt="SOL area chart" loading="lazy">
-                        </div>
-                        <p class="chart-preview-caption">SOL · 1D · Area style</p>
-                    </div>
-                    <div>
-                        <div class="chart-preview">
-                            <img src="/v1/tradingview/advanced-chart?symbol=BINANCE:BNBUSDT&interval=1D&theme=dark&style=heikinAshi&key=demo-key-pro-001"
-                                alt="BNB Heikin Ashi" loading="lazy">
-                        </div>
-                        <p class="chart-preview-caption">BNB · 1D · Heikin Ashi</p>
-                    </div>
-                </div>
-
-                <h3>Studies Array Object</h3>
-                <pre><code>{
-  "name": "Bollinger Bands",       // Indicator name (see Indicators list)
-  "forceOverlay": false,            // Overlay on main chart pane
-  "override": {                     // Per-indicator style overrides
-    "Upper.linewidth": 2,
-    "Upper.color": "rgb(0,150,255)"
-  }
-}</code></pre>
-            </section>
-
-            <!-- ─── Storage ────────────────────────────────────────────────── -->
-            <section id="storage">
-                <h2>Save to Storage</h2>
-                <p>Same as Advanced Chart v2 but saves the image to server storage and returns a URL instead of raw
-                    image bytes.</p>
-                <div class="endpoint-pill method-post"><span class="method-label">POST</span><span
-                        class="method-path">/v2/tradingview/advanced-chart/storage</span></div>
-                <h3>Response</h3>
-                <pre><code>{
-  "success": true,
-  "filename": "a1b2c3d4-uuid.png",
-  "url": "/storage/a1b2c3d4-uuid.png",
-  "size": 154320,
-  "createdAt": "2026-03-05T06:00:00.000Z"
-}</code></pre>
-            </section>
-
-            <!-- ─── Exchange List ──────────────────────────────────────────── -->
-            <section id="exchange">
-                <h2>Exchange List</h2>
-                <p>Returns a list of all supported TradingView exchange identifiers.</p>
-                <div class="endpoint-pill method-get"><span class="method-label">GET</span><span
-                        class="method-path">/v3/tradingview/exchange/list</span></div>
-                <h3>Request</h3>
-                <pre><code>curl "http://localhost:3000/v3/tradingview/exchange/list?key=YOUR_KEY"</code></pre>
-                <h3>Response</h3>
-                <pre><code>{
-  "updatedAt": "2026-03-05T00:00:00.000Z",
-  "payload": ["AMEX", "BINANCE", "COINBASE", "NASDAQ", "NSE", "NYSE", ...]
-}</code></pre>
-            </section>
-
-            <!-- ─── Exchange Symbols ───────────────────────────────────────── -->
-            <section id="symbols">
-                <h2>Exchange Symbols</h2>
-                <p>Returns symbols available for a given exchange identifier.</p>
-                <div class="endpoint-pill method-get"><span class="method-label">GET</span><span
-                        class="method-path">/v3/tradingview/exchange/symbols</span></div>
-                <h3>Query Parameters</h3>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Required</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="param-name">exchange</span></td>
-                            <td><span class="param-required">required</span></td>
-                            <td>Exchange ID (e.g., BINANCE, NASDAQ, NSE)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">key</span></td>
-                            <td><span class="param-required">required</span></td>
-                            <td>API key</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>Request</h3>
-                <pre><code>curl "http://localhost:3000/v3/tradingview/exchange/symbols?exchange=NSE&key=YOUR_KEY"</code></pre>
-                <h3>Response</h3>
-                <pre><code>{
-  "updatedAt": "2026-03-05T00:00:00.000Z",
-  "exchange": "NSE",
-  "payload": ["NSE:RELIANCE", "NSE:TCS", "NSE:INFY", "NSE:HDFCBANK", ...]
-}</code></pre>
-            </section>
-
-            <!-- ─── Chart Styles ───────────────────────────────────────────── -->
-            <section id="chart-styles">
-                <h2>Chart Styles</h2>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Style Value</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="param-name">bar</span></td>
-                            <td>OHLC bar chart</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">candle</span></td>
-                            <td>Japanese candlestick (default)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">line</span></td>
-                            <td>Line chart (close price)</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">area</span></td>
-                            <td>Area/mountain chart</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">heikinAshi</span></td>
-                            <td>Heikin Ashi candlestick</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">hollowCandle</span></td>
-                            <td>Hollow candlestick</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">baseline</span></td>
-                            <td>Baseline chart</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">hiLo</span></td>
-                            <td>Hi-Lo chart</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">column</span></td>
-                            <td>Column/bar chart</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- ─── Indicators ─────────────────────────────────────────────── -->
-            <section id="indicators">
-                <h2>Indicators</h2>
-                <p>Use the indicator name as the <code>studies</code> value in your API request. Common indicators:</p>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Name (for API)</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="param-name">Relative Strength Index</span></td>
-                            <td>RSI momentum oscillator</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">MACD</span></td>
-                            <td>Moving Average Convergence Divergence</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Bollinger Bands</span></td>
-                            <td>Volatility bands</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Moving Average</span></td>
-                            <td>Simple moving average</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Moving Average Exponential</span></td>
-                            <td>Exponential moving average</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Volume</span></td>
-                            <td>Volume bars</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Stochastic</span></td>
-                            <td>Stochastic oscillator</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Ichimoku Cloud</span></td>
-                            <td>Ichimoku kinko hyo</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Average True Range</span></td>
-                            <td>ATR volatility indicator</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Parabolic SAR</span></td>
-                            <td>Parabolic stop and reverse</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Commodity Channel Index</span></td>
-                            <td>CCI momentum indicator</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Williams %R</span></td>
-                            <td>Williams Percent Range</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">VWAP</span></td>
-                            <td>Volume-weighted average price</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Super Trend</span></td>
-                            <td>Supertrend trend indicator</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Donchian Channels</span></td>
-                            <td>Price channel bands</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Keltner Channels</span></td>
-                            <td>Volatility-based channels</td>
-                        </tr>
-                        <tr>
-                            <td><span class="param-name">Volume Profile Visible Range</span></td>
-                            <td>VPVR volume distribution</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- ─── Drawings ───────────────────────────────────────────────── -->
-            <section id="drawings">
-                <h2>Drawings (v2 POST only)</h2>
-                <p>Add chart drawings via the <code>drawings</code> array parameter in the v2 POST body:</p>
-                <pre><code>"drawings": [
-  {
-    "name": "Horizontal Line",
-    "input": { "price": 45000 },
-    "override": { "lineWidth": 2, "lineColor": "rgb(34,197,94)" }
-  },
-  {
-    "name": "Trend Line",
-    "input": {
-      "startPrice": 40000, "startBarIndex": -20,
-      "endPrice": 48000,   "endBarIndex": 0
-    }
-  }
-]</code></pre>
-                <p>Supported drawing names: <code>Horizontal Line</code>, <code>Vertical Line</code>,
-                    <code>Trend Line</code>, <code>Rectangle</code>, <code>Fib Retracement</code>,
-                    <code>Order Line</code>, <code>Long Position</code>, <code>Short Position</code>,
-                    <code>Arrow Mark Up</code>, <code>Arrow Mark Down</code>, <code>Text</code>, <code>Callout</code>.
-                </p>
-            </section>
-
-            <!-- ─── Error Codes ────────────────────────────────────────────── -->
-            <section id="errors">
-                <h2>Error Codes</h2>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>HTTP Code</th>
-                            <th>Meaning</th>
-                            <th>Solution</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>200</td>
-                            <td>Success</td>
-                            <td>—</td>
-                        </tr>
-                        <tr>
-                            <td>400</td>
-                            <td>Bad Request</td>
-                            <td>Check your parameters (e.g., missing exchange)</td>
-                        </tr>
-                        <tr>
-                            <td>401</td>
-                            <td>Unauthorized</td>
-                            <td>Provide a valid API key</td>
-                        </tr>
-                        <tr>
-                            <td>404</td>
-                            <td>Not Found</td>
-                            <td>Endpoint doesn't exist or exchange not found</td>
-                        </tr>
-                        <tr>
-                            <td>429</td>
-                            <td>Too Many Requests</td>
-                            <td>Daily or rate limit exceeded — wait or upgrade</td>
-                        </tr>
-                        <tr>
-                            <td>500</td>
-                            <td>Server Error</td>
-                            <td>Chart generation failed — check symbol validity</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>Error Response Body</h3>
-                <pre><code>{
-  "error": true,
-  "message": "Daily request limit of 50 reached for BASIC tier.",
-  "tier": "BASIC",
-  "dailyLimit": 50,
-  "usedToday": 50
-}</code></pre>
-            </section>
-
-            <!-- ─── Register API ───────────────────────────────────────────── -->
-            <section id="register-api">
-                <h2>Register (Get API Key)</h2>
-                <p>Use this endpoint to generate a new API key programmatically.</p>
-                <div class="endpoint-pill method-post"><span class="method-label">POST</span><span
-                        class="method-path">/api/register</span></div>
-                <pre><code>curl -X POST "http://localhost:3000/api/register" \
-  -H "Content-Type: application/json" \
-  -d '{"email":"you@example.com","tier":"BASIC"}'</code></pre>
-                <h3>Response</h3>
-                <pre><code>{
-  "success": true,
-  "apiKey": "cs-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "email": "you@example.com",
-  "tier": "BASIC"
-}</code></pre>
-            </section>
-
-            <!-- ─── Key Info ───────────────────────────────────────────────── -->
-            <section id="key-info">
-                <h2>Key Info</h2>
-                <p>Returns current API key metadata including tier and today's usage count.</p>
-                <div class="endpoint-pill method-get"><span class="method-label">GET</span><span
-                        class="method-path">/api/key-info</span></div>
-                <pre><code>curl "http://localhost:3000/api/key-info" -H "x-api-key: YOUR_KEY"</code></pre>
-                <h3>Response</h3>
-                <pre><code>{
-  "success": true,
-  "apiKey": "cs-...",
-  "email": "you@example.com",
-  "tier": "BASIC",
-  "createdAt": "2026-01-01T00:00:00.000Z",
-  "active": true,
-  "usedToday": 12
-}</code></pre>
             </section>
 
         </main>
     </div>
 
-    <!-- Register Modal -->
-    <div class="modal-bg" id="register-modal" onclick="if(event.target===this)this.classList.remove('open')">
-        <div class="modal">
-            <button class="modal-close"
-                onclick="document.getElementById('register-modal').classList.remove('open')">×</button>
-            <h2>Get your free API key</h2>
-            <p>Start with 50 requests/day for free.</p>
-            <div class="form-group">
-                <label>Email</label>
-                <input class="form-input" type="email" id="reg-email" placeholder="you@example.com" />
-            </div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doRegister()">Generate
-                Key →</button>
-            <div class="modal-result" id="reg-result">
-                <h4>🎉 Your API Key</h4>
-                <code id="reg-key-display"></code>
-            </div>
-        </div>
-    </div>
-
-    <div class="toast" id="toast"></div>
-
     <script>
-        // ── Sidebar active link tracking
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.docs-nav-link');
-        window.addEventListener('scroll', () => {
-            let cur = '';
-            sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
-            navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${cur}`));
-        });
+        function switchTab(tabEl, panelId) {
+            const wrap = tabEl.closest('.endpoint-card, .docs-main');
+            const tabRow = tabEl.closest('.code-tabs-row');
+            tabRow.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
+            const wrapPanel = tabRow.nextElementSibling;
+            if (!wrapPanel) return;
+            const panels = tabRow.parentElement.querySelectorAll('.code-panel');
+            panels.forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(panelId);
+            if (target) target.classList.add('active');
+        }
 
-        // ── Copy to clipboard
         function copyCode(btn) {
-            const code = btn.nextElementSibling.querySelector('code').innerText;
-            navigator.clipboard.writeText(code);
-            btn.textContent = '✓ Copied'; btn.classList.add('copied');
-            setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+            const panel = btn.closest('.code-panel');
+            const text = panel.querySelector('pre').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓ Copied';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+            });
         }
 
-        // ── Code language tabs
-        function switchTab(group, lang, el) {
-            document.querySelectorAll(`#tabs-${group} .code-tab`).forEach(t => t.classList.remove('active'));
-            document.querySelectorAll(`[id^="${group}-"]`).forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(`${group}-${lang}`).classList.add('active');
-        }
-
-        // ── Indicator pill toggle
-        document.querySelectorAll('.ind-pill').forEach(p => {
-            p.addEventListener('click', () => p.classList.toggle('selected'));
-        });
-
-        // ── Playground
-        async function runPlayground() {
-            const btn = document.getElementById('pl-btn');
-            const preview = document.getElementById('pl-preview');
-            const urlBox = document.getElementById('pl-url');
-            btn.disabled = true; btn.textContent = '⏳ Generating...';
-
-            const symbol = document.getElementById('pl-symbol').value || 'BINANCE:BTCUSDT';
-            const interval = document.getElementById('pl-interval').value;
-            const style = document.getElementById('pl-style').value;
-            const theme = document.getElementById('pl-theme').value;
-            const [w, h] = document.getElementById('pl-size').value.split('x');
-            const key = localStorage.getItem('chartsnap_key') || 'demo-key-pro-001';
-            const selectedStudies = [...document.querySelectorAll('.ind-pill.selected')].map(p => p.dataset.study);
-
-            const params = new URLSearchParams({ symbol, interval, style, theme, width: w, height: h, key });
-            selectedStudies.forEach(s => params.append('studies', s));
-            const url = `/v1/tradingview/advanced-chart?${params}`;
-
-            urlBox.style.display = 'block';
-            urlBox.innerHTML = `<span>GET</span> ${url}`;
-            preview.innerHTML = '<div class="play-placeholder"><span>⏳</span>Fetching real market data...</div>';
-
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error((await res.json()).message || 'Generation failed');
-                const blob = await res.blob();
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(blob);
-                img.alt = `${symbol} chart`;
-                preview.innerHTML = '';
-                preview.appendChild(img);
-            } catch (err) {
-                preview.innerHTML = `<div class="play-placeholder"><span>❌</span>${err.message}</div>`;
-            }
-            btn.disabled = false; btn.textContent = '▶ Generate Chart';
-        }
-
-        async function doRegister() {
-            const email = document.getElementById('reg-email').value.trim();
-            if (!email.includes('@')) { alert('Valid email required'); return; }
-            const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, tier: 'BASIC' }) });
-            const data = await res.json();
-            if (data.apiKey) {
-                document.getElementById('reg-key-display').textContent = data.apiKey;
-                document.getElementById('reg-result').classList.add('show');
-                localStorage.setItem('chartsnap_key', data.apiKey);
-                localStorage.setItem('chartsnap_email', data.email);
-                localStorage.setItem('chartsnap_tier', data.tier);
-            }
-        }
+        // Scrollspy
+        const sections = document.querySelectorAll('.doc-section[id]');
+        const links = document.querySelectorAll('.sidebar-link');
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    links.forEach(l => l.classList.remove('active'));
+                    const link = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+                    if (link) link.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        sections.forEach(s => obs.observe(s));
     </script>
+
 </body>
 
 </html>

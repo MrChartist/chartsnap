@@ -10,6 +10,9 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
+process.env.PUPPETEER_CACHE_DIR = '/tmp/chartsnap-run/.cache';
+const puppeteer = require('puppeteer');
+
 // Use puppeteer's own bundled chrome-headless-shell (no crashpad, no ~/Library dependency)
 // This is the ONLY binary that works inside restricted OS sandboxes on macOS
 let _executablePath = null;
@@ -28,15 +31,17 @@ function getHeadlessShellPath() {
     return _executablePath;
 }
 
+// Chrome user data dir — must be writable. /tmp/chartsnap-run is always writable in this env.
+const CHROME_DATA_DIR = '/tmp/chartsnap-run/.chrome';
+fs.mkdirSync(CHROME_DATA_DIR, { recursive: true });
+
 let _browser = null;
 async function getBrowser() {
     if (!_browser) {
-        const userDataDir = path.join(os.tmpdir(), 'chartsnap-chrome-data');
-        fs.mkdirSync(userDataDir, { recursive: true });
         _browser = await puppeteer.launch({
             headless: 'shell',
             executablePath: getHeadlessShellPath(),
-            userDataDir,
+            userDataDir: CHROME_DATA_DIR,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',

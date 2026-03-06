@@ -758,57 +758,15 @@
 
             <hr class="ctrl-divider">
 
-            <!-- Chart Style -->
+            <!-- TradingView Layout ID -->
             <div class="ctrl-section">
-                <div class="ctrl-label">Chart Style</div>
-                <div class="style-grid">
-                    <div class="style-card active" data-style="candle">
-                        <div class="style-icon">🕯️</div>
-                        <div class="style-name">Candle</div>
-                    </div>
-                    <div class="style-card" data-style="heikinAshi">
-                        <div class="style-icon">🎌</div>
-                        <div class="style-name">H. Ashi</div>
-                    </div>
-                    <div class="style-card" data-style="area">
-                        <div class="style-icon">🏔️</div>
-                        <div class="style-name">Area</div>
-                    </div>
-                    <div class="style-card" data-style="line">
-                        <div class="style-icon">📈</div>
-                        <div class="style-name">Line</div>
-                    </div>
-                    <div class="style-card" data-style="bar">
-                        <div class="style-icon">📊</div>
-                        <div class="style-name">Bar</div>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="ctrl-divider">
-
-            <!-- Indicators -->
-            <div class="ctrl-section">
-                <div class="ctrl-label">Indicators</div>
-                <div class="indicator-grid">
-                    <div class="ind-toggle" data-study="Relative Strength Index">RSI</div>
-                    <div class="ind-toggle" data-study="MACD">MACD</div>
-                    <div class="ind-toggle" data-study="Bollinger Bands">Bollinger Bands</div>
-                    <div class="ind-toggle" data-study="Moving Average">SMA</div>
-                    <div class="ind-toggle" data-study="Moving Average Exponential">EMA</div>
-                    <div class="ind-toggle" data-study="Volume">Volume</div>
-                </div>
-            </div>
-
-            <hr class="ctrl-divider">
-
-            <!-- Theme + Size -->
-            <div class="ctrl-section">
-                <div class="ctrl-label">Theme</div>
-                <div class="theme-toggle">
-                    <div class="theme-btn active" data-theme="dark">🌙 Dark</div>
-                    <div class="theme-btn" data-theme="light">☀️ Light</div>
-                </div>
+                <div class="ctrl-label">TradingView Layout ID <span
+                        style="color:#64748b;font-weight:400;font-size:10px;">(optional)</span></div>
+                <input class="symbol-input" id="cb-layout" placeholder="e.g. hMZXawOv (from your chart share URL)"
+                    style="font-family:'JetBrains Mono',monospace;font-size:12px;">
+                <div style="font-size:11px;color:#64748b;margin-top:6px;">From <code
+                        style="color:#7b61ff">tradingview.com/chart/<b>hMZXawOv</b>/</code> — when set, captures your
+                    exact TradingView layout</div>
             </div>
 
             <div class="ctrl-section">
@@ -817,8 +775,8 @@
                     <div class="size-btn active" data-w="800" data-h="600">800×600</div>
                     <div class="size-btn" data-w="1024" data-h="640">1024×640</div>
                     <div class="size-btn" data-w="1280" data-h="720">1280×720</div>
-                    <div class="size-btn" data-w="900" data-h="500">900×500</div>
                     <div class="size-btn" data-w="1920" data-h="1080">1920×1080</div>
+                    <div class="size-btn" data-w="900" data-h="500">900×500</div>
                     <div class="size-btn" data-w="600" data-h="400">600×400</div>
                 </div>
             </div>
@@ -914,9 +872,7 @@
         let state = {
             symbol: 'BINANCE:BTCUSDT',
             interval: '1D',
-            style: 'candle',
-            theme: 'dark',
-            indicators: [],
+            layout: '',
             width: 800,
             height: 600,
             key: 'demo-key-pro-001',
@@ -942,35 +898,6 @@
                 });
             });
 
-            // Style cards
-            document.querySelectorAll('.style-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    state.style = card.dataset.style;
-                    updateUrlBar();
-                });
-            });
-
-            // Indicator toggles
-            document.querySelectorAll('.ind-toggle').forEach(t => {
-                t.addEventListener('click', () => {
-                    t.classList.toggle('active');
-                    state.indicators = [...document.querySelectorAll('.ind-toggle.active')].map(x => x.dataset.study);
-                    updateUrlBar();
-                });
-            });
-
-            // Theme
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.theme = btn.dataset.theme;
-                    updateUrlBar();
-                });
-            });
-
             // Size
             document.querySelectorAll('.size-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -985,6 +912,12 @@
             // Symbol input
             document.getElementById('cb-symbol').addEventListener('input', e => {
                 state.symbol = e.target.value.trim().toUpperCase();
+                updateUrlBar();
+            });
+
+            // Layout input
+            document.getElementById('cb-layout').addEventListener('input', e => {
+                state.layout = e.target.value.trim();
                 updateUrlBar();
             });
 
@@ -1005,25 +938,30 @@
         }
 
         function buildUrl() {
+            // If a layout ID is provided, show the async render endpoint
+            if (state.layout) {
+                return `/v1/renders [POST] layout:${state.layout} symbol:${state.symbol} interval:${state.interval} ${state.width}×${state.height}`;
+            }
             const params = new URLSearchParams({
                 symbol: state.symbol,
                 interval: state.interval,
-                style: state.style,
-                theme: state.theme,
                 width: state.width,
                 height: state.height,
                 key: state.key,
             });
-            state.indicators.forEach(ind => params.append('studies', ind));
             return `/v1/tradingview/advanced-chart?${params.toString()}`;
         }
 
         function updateUrlBar() {
             currentUrl = buildUrl();
             const bar = document.getElementById('url-bar');
-            bar.innerHTML = `<span class="method">GET</span>${currentUrl
-                .replace(/([?&])(\w+)=/g, (m, sep, k) => `${sep}<span class="param-key">${k}</span>=`)
-                .replace(/=([^&]+)/g, (m, v) => `=<span class="param-val">${v}</span>`)}`;
+            if (state.layout) {
+                bar.innerHTML = `<span class="method">POST</span><span style="color:#4a5568">/v1/renders</span> &nbsp; <span class="param-key">layout</span>=<span class="param-val">${state.layout}</span> &nbsp; <span class="param-key">symbol</span>=<span class="param-val">${state.symbol}</span> &nbsp; <span class="param-key">interval</span>=<span class="param-val">${state.interval}</span> &nbsp; <span class="param-key">size</span>=<span class="param-val">${state.width}×${state.height}</span>`;
+            } else {
+                bar.innerHTML = `<span class="method">GET</span>${currentUrl
+                    .replace(/([?&])(\w+)=/g, (m, sep, k) => `${sep}<span class="param-key">${k}</span>=`)
+                    .replace(/=([^&]+)/g, (m, v) => `=<span class="param-val">${v}</span>`)}`;
+            }
         }
 
         async function generateChart() {
@@ -1038,36 +976,76 @@
             btn.disabled = true; btn.textContent = '⏳ Generating...';
             loading.classList.add('show');
             dot.classList.add('loading');
-            statusText.textContent = 'Fetching market data...';
             placeholder.style.display = 'none';
 
             state.symbol = document.getElementById('cb-symbol').value.trim().toUpperCase() || state.symbol;
+            state.layout = document.getElementById('cb-layout').value.trim();
             state.key = document.getElementById('cb-key').value.trim();
-            currentUrl = buildUrl();
-            updateUrlBar();
 
             try {
-                const res = await fetch(currentUrl);
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
-                    throw new Error(err.message || 'Generation failed');
-                }
-                currentBlob = await res.blob();
-                const objectUrl = URL.createObjectURL(currentBlob);
+                let imageBlob;
+                if (state.layout) {
+                    // Use async queue + polling for layout-based renders
+                    statusText.textContent = 'Queuing layout render...';
+                    const queueRes = await fetch('/v1/renders', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${state.key}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            engine: 'tradingview_layout',
+                            data: { layout: state.layout, symbol: state.symbol, interval: state.interval },
+                            output: { format: 'png', width: state.width, height: state.height }
+                        })
+                    });
+                    const job = await queueRes.json();
+                    if (!queueRes.ok) throw new Error(job.detail || job.message || 'Queue failed');
 
+                    // Poll until done (max 90s)
+                    const jobId = job.job_id || job.id;
+                    let jobData, elapsed = 0;
+                    while (elapsed < 90000) {
+                        await new Promise(r => setTimeout(r, 2000));
+                        elapsed += 2000;
+                        statusText.textContent = `Rendering layout... ${Math.round(elapsed / 1000)}s`;
+                        const pollRes = await fetch(`/v1/jobs/${jobId}`, { headers: { 'Authorization': `Bearer ${state.key}` } });
+                        jobData = await pollRes.json();
+                        if (jobData.status === 'succeeded') break;
+                        if (jobData.status === 'failed') throw new Error(jobData.error_code || 'Render failed');
+                    }
+                    if (jobData.status !== 'succeeded') throw new Error('Timed out waiting for render');
+
+                    // Fetch the resulting image
+                    const imgRes = await fetch(jobData.artifacts.cdn_url, { headers: { 'Authorization': `Bearer ${state.key}` } });
+                    imageBlob = await imgRes.blob();
+                } else {
+                    // Direct synchronous GET for native chart
+                    statusText.textContent = 'Fetching market data...';
+                    const params = new URLSearchParams({
+                        symbol: state.symbol, interval: state.interval,
+                        width: state.width, height: state.height, key: state.key
+                    });
+                    const res = await fetch(`/v1/tradingview/advanced-chart?${params}`);
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+                        throw new Error(err.message || 'Generation failed');
+                    }
+                    imageBlob = await res.blob();
+                }
+
+                currentBlob = imageBlob;
+                const objectUrl = URL.createObjectURL(currentBlob);
                 img.src = objectUrl;
                 img.style.display = 'block';
                 placeholder.style.display = 'none';
 
-                titleEl.textContent = `${state.symbol} · ${state.interval} · ${state.style}`;
+                const modeLabel = state.layout ? `Layout: ${state.layout}` : state.symbol;
+                titleEl.textContent = `${modeLabel} · ${state.interval} · ${state.width}×${state.height}`;
                 dot.classList.remove('loading');
                 statusText.textContent = `✓ ${(currentBlob.size / 1024).toFixed(0)}KB PNG · ${state.width}×${state.height}`;
 
                 document.getElementById('btn-download').disabled = false;
                 document.getElementById('btn-save').disabled = false;
 
-                // Save to local history
-                addToHistory(state.symbol, state.interval, objectUrl);
+                addToHistory(state.layout || state.symbol, state.interval, objectUrl);
                 showToast('✅ Chart generated!');
             } catch (err) {
                 placeholder.style.display = 'flex';
