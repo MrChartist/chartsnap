@@ -965,43 +965,29 @@
             try {
                 let imageBlob;
                 if (state.layout) {
-                    // Use async queue + polling for layout-based renders
-                    statusText.textContent = 'Queuing layout render...';
-                    const queueRes = await fetch('/v1/renders', {
+                    // Layout mode: direct synchronous screenshot of the user's TradingView layout
+                    statusText.textContent = 'Capturing your TradingView layout...';
+                    const res = await fetch(`/v1/tradingview/layout-chart/${encodeURIComponent(state.layout)}`, {
                         method: 'POST',
-                        headers: { 'Authorization': `Bearer ${state.key}`, 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            engine: 'tradingview_layout',
-                            data: { layout: state.layout, symbol: state.symbol, interval: state.interval },
-                            output: { format: 'png', width: state.width, height: state.height }
+                            symbol: state.symbol || undefined,
+                            interval: state.interval,
+                            width: state.width,
+                            height: state.height,
                         })
                     });
-                    const job = await queueRes.json();
-                    if (!queueRes.ok) throw new Error(job.detail || job.message || 'Queue failed');
-
-                    // Poll until done (max 90s)
-                    const jobId = job.job_id || job.id;
-                    let jobData, elapsed = 0;
-                    while (elapsed < 90000) {
-                        await new Promise(r => setTimeout(r, 2000));
-                        elapsed += 2000;
-                        statusText.textContent = `Rendering layout... ${Math.round(elapsed / 1000)}s`;
-                        const pollRes = await fetch(`/v1/jobs/${jobId}`, { headers: { 'Authorization': `Bearer ${state.key}` } });
-                        jobData = await pollRes.json();
-                        if (jobData.status === 'succeeded') break;
-                        if (jobData.status === 'failed') throw new Error(jobData.error_code || 'Render failed');
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+                        throw new Error(err.message || 'Layout capture failed');
                     }
-                    if (jobData.status !== 'succeeded') throw new Error('Timed out waiting for render');
-
-                    // Fetch the resulting image
-                    const imgRes = await fetch(jobData.artifacts.cdn_url, { headers: { 'Authorization': `Bearer ${state.key}` } });
-                    imageBlob = await imgRes.blob();
+                    imageBlob = await res.blob();
                 } else {
-                    // Direct synchronous GET for native chart
-                    statusText.textContent = 'Fetching market data...';
+                    // Standard mode: screenshot TradingView chart for the given symbol
+                    statusText.textContent = 'Capturing TradingView chart...';
                     const params = new URLSearchParams({
                         symbol: state.symbol, interval: state.interval,
-                        width: state.width, height: state.height, key: state.key
+                        width: state.width, height: state.height
                     });
                     const res = await fetch(`/v1/tradingview/advanced-chart?${params}`);
                     if (!res.ok) {
