@@ -911,7 +911,7 @@
                     <div class="group-head">
                         <label class="group-label" style="color: #A78BFA; font-weight: 700;">TradingView Layout
                             ID</label>
-                        <span class="group-hint" style="color: var(--accent-purple)">(Highly Recommended)</span>
+                        <span class="group-hint" style="color: #EF4444; font-weight: 600;">(Required)</span>
                     </div>
                     <div class="input-wrapper">
                         <div class="input-icon">
@@ -1233,6 +1233,12 @@
             // Read latest raw inputs if user typed without firing event
             if (inputSymbol.value) state.symbol = inputSymbol.value.trim().toUpperCase();
             if (inputLayout.value) state.layout = inputLayout.value.trim();
+
+            if (!state.layout) {
+                showToast('❌ TradingView Layout ID is required', true);
+                inputLayout.focus();
+                return;
+            }
 
             // UI states
             btnGenerate.disabled = true;
