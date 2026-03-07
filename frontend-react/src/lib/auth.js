@@ -44,7 +44,7 @@ export function getUser() {
 // Authenticated fetch — automatically adds Authorization header
 export function authFetch(url, options = {}) {
     const token = getToken();
-    return fetch(url, {
+    return fetch('http://localhost:3000' + url, {
         ...options,
         headers: {
             'Content-Type': 'application/json',

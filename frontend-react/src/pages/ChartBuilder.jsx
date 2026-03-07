@@ -49,10 +49,10 @@ function ToggleGroup({ options, value, onChange, getLabel, getValue, color = 'vi
                         key={val}
                         onClick={() => onChange(val)}
                         className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${active
-                                ? color === 'cyan'
-                                    ? 'bg-cyan-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.3)]'
-                                    : 'bg-violet-500 text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]'
-                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10'
+                            ? color === 'cyan'
+                                ? 'bg-cyan-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                                : 'bg-violet-500 text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10'
                             }`}
                     >
                         {label}
@@ -84,7 +84,7 @@ export default function ChartBuilder() {
     const handleChange = (e) => set(e.target.name, e.target.value);
 
     const buildApiUrl = useCallback(() => {
-        const base = window.location.origin;
+        const base = 'http://localhost:3000';
         const params = new URLSearchParams();
         if (form.symbol) params.set('symbol', form.symbol);
         if (form.interval) params.set('interval', form.interval);
@@ -241,8 +241,8 @@ export default function ChartBuilder() {
                             onClick={generateChart}
                             disabled={status.type === 'loading'}
                             className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${status.type === 'loading'
-                                    ? 'bg-gray-700/50 text-gray-400 cursor-wait'
-                                    : 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] shadow-[0_0_15px_rgba(139,92,246,0.2)]'
+                                ? 'bg-gray-700/50 text-gray-400 cursor-wait'
+                                : 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] shadow-[0_0_15px_rgba(139,92,246,0.2)]'
                                 }`}
                         >
                             {status.type === 'loading' ? (
@@ -264,8 +264,8 @@ export default function ChartBuilder() {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all capitalize ${activeTab === tab
-                                        ? 'bg-white/10 text-white'
-                                        : 'text-gray-500 hover:text-gray-300'
+                                    ? 'bg-white/10 text-white'
+                                    : 'text-gray-500 hover:text-gray-300'
                                     }`}
                             >
                                 {tab === 'api-url' ? 'API URL' : tab === 'curl' ? 'cURL' : 'Preview'}
