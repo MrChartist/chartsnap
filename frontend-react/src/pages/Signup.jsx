@@ -46,16 +46,16 @@ export default function Signup() {
                 </div>
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                     className="w-full max-w-md relative z-10">
-                    <div className="bg-[#0d1117] border border-white/10 rounded-2xl p-8 text-center space-y-6">
+                    <div className="bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-6">
                         <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
                             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-black text-white mb-1">Account Created!</h1>
-                            <p className="text-gray-500 text-sm">Save your API key — it won't be shown again.</p>
+                            <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-1">Account Created!</h1>
+                            <p className="text-gray-500 dark:text-gray-500 text-sm">Save your API key — it won't be shown again.</p>
                         </div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl p-4 text-left">
-                            <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider font-semibold">Your API Key</p>
+                        <div className="bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-xl p-4 text-left">
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mb-2 uppercase tracking-wider font-semibold">Your API Key</p>
                             <code className="text-xs text-violet-300 font-mono break-all leading-relaxed">{apiKey}</code>
                         </div>
                         <div className="flex items-center gap-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
@@ -63,11 +63,11 @@ export default function Signup() {
                         </div>
                         <div className="flex gap-3">
                             <button onClick={() => { navigator.clipboard.writeText(apiKey); }}
-                                className="flex-1 py-2.5 rounded-xl border border-white/10 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white hover:bg-black/5 dark:bg-white/5 transition-all">
                                 Copy Key
                             </button>
                             <button onClick={() => navigate('/dashboard')}
-                                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-bold text-sm hover:scale-[1.02] transition-transform">
+                                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 text-gray-900 dark:text-white font-bold text-sm hover:scale-[1.02] transition-transform">
                                 Go to Dashboard →
                             </button>
                         </div>
@@ -89,17 +89,17 @@ export default function Signup() {
             <div className="hidden lg:flex flex-col justify-center px-16 py-16 w-[480px] shrink-0 border-r border-white/[0.06]">
                 <div className="flex items-center gap-2.5 mb-12">
                     <AreaChart className="w-6 h-6 text-violet-400" />
-                    <span className="text-lg font-black text-white">PixelTrade</span>
+                    <span className="text-lg font-black text-gray-900 dark:text-white">PixelTrade</span>
                 </div>
-                <h2 className="text-3xl font-black text-white mb-3 leading-tight">Start generating<br />charts in seconds</h2>
-                <p className="text-gray-500 text-sm mb-10 leading-relaxed">A developer-first REST API for TradingView chart screenshots. One request, one PNG.</p>
+                <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-3 leading-tight">Start generating<br />charts in seconds</h2>
+                <p className="text-gray-500 dark:text-gray-500 text-sm mb-10 leading-relaxed">A developer-first REST API for TradingView chart screenshots. One request, one PNG.</p>
                 <div className="space-y-3">
                     {FEATURES.map(f => (
                         <div key={f} className="flex items-center gap-3">
                             <div className="w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                             </div>
-                            <span className="text-sm text-gray-400">{f}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">{f}</span>
                         </div>
                     ))}
                 </div>
@@ -112,35 +112,35 @@ export default function Signup() {
                     {/* Mobile logo */}
                     <div className="flex items-center gap-2 mb-8 lg:hidden">
                         <AreaChart className="w-5 h-5 text-violet-400" />
-                        <span className="font-black text-white">PixelTrade</span>
+                        <span className="font-black text-gray-900 dark:text-white">PixelTrade</span>
                     </div>
-                    <h1 className="text-2xl font-black text-white mb-1">Create your account</h1>
-                    <p className="text-gray-500 text-sm mb-8">Free plan — no credit card required</p>
+                    <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-1">Create your account</h1>
+                    <p className="text-gray-500 dark:text-gray-500 text-sm mb-8">Free plan — no credit card required</p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Name */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-400 mb-1.5">Full Name</label>
+                            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Full Name</label>
                             <input value={form.name} onChange={set('name')} type="text" required
                                 placeholder="Roop Singh"
-                                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
+                                className="w-full bg-black/[0.04] dark:bg-white/[0.04] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
                         </div>
                         {/* Email */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-400 mb-1.5">Email</label>
+                            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Email</label>
                             <input value={form.email} onChange={set('email')} type="email" required
                                 placeholder="you@example.com"
-                                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
+                                className="w-full bg-black/[0.04] dark:bg-white/[0.04] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
                         </div>
                         {/* Password */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-400 mb-1.5">Password</label>
+                            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Password</label>
                             <div className="relative">
                                 <input value={form.password} onChange={set('password')} type={showPass ? 'text' : 'password'} required minLength={8}
                                     placeholder="Minimum 8 characters"
-                                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 pr-11 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
+                                    className="w-full bg-black/[0.04] dark:bg-white/[0.04] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pr-11 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-violet-500/60 focus:bg-white/[0.06] transition-all" />
                                 <button type="button" onClick={() => setShowPass(s => !s)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition-colors">
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-700 dark:text-gray-300 transition-colors">
                                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
@@ -153,9 +153,9 @@ export default function Signup() {
                         )}
 
                         <button type="submit" disabled={loading}
-                            className="w-full relative group py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 disabled:opacity-60 mt-2 overflow-hidden">
+                            className="w-full relative group py-3.5 rounded-xl font-bold text-gray-900 dark:text-white text-sm flex items-center justify-center gap-2 disabled:opacity-60 mt-2 overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-cyan-600" />
-                            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors" />
+                            <div className="absolute inset-0 bg-white/0 group-hover:bg-black/10 dark:bg-white/10 transition-colors" />
                             <span className="relative flex items-center gap-2">
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                                 {loading ? 'Creating account…' : 'Create Free Account'}

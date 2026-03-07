@@ -255,7 +255,7 @@ function CopyBtn({ text, className = '' }) {
     };
     return (
         <button onClick={copy}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all ${className}`}>
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-gray-200 dark:border-white/10 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-all ${className}`}>
             {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
             {copied ? 'Copied!' : 'Copy'}
         </button>
@@ -279,12 +279,12 @@ function MethodBadge({ method }) {
 
 function CodeBlock({ code, lang = 'bash' }) {
     return (
-        <div className="relative rounded-xl overflow-hidden bg-[#0d1117] border border-white/10">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.02]">
-                <span className="text-xs text-gray-500 font-mono">{lang}</span>
+        <div className="relative rounded-xl overflow-hidden bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-white/10">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.02]">
+                <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">{lang}</span>
                 <CopyBtn text={code} />
             </div>
-            <pre className="p-4 text-sm font-mono text-gray-300 overflow-x-auto leading-7 whitespace-pre">
+            <pre className="p-4 text-sm font-mono text-gray-700 dark:text-gray-300 overflow-x-auto leading-7 whitespace-pre">
                 <code>{code}</code>
             </pre>
         </div>
@@ -308,7 +308,7 @@ function InfoBox({ icon: Icon = Info, color = 'blue', children }) {
 
 function ParamRow({ p }) {
     return (
-        <tr className="border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
+        <tr className="border-b border-white/[0.05] last:border-0 hover:bg-black/[0.02] dark:bg-white/[0.02] transition-colors">
             <td className="py-3 pr-4 align-top">
                 <div className="flex flex-col gap-1">
                     <code className="text-violet-300 bg-violet-500/10 px-2 py-0.5 rounded text-xs font-mono w-fit">{p.name}</code>
@@ -321,15 +321,15 @@ function ParamRow({ p }) {
                 <div className="flex flex-col gap-1">
                     {p.required
                         ? <span className="text-[10px] font-bold text-red-400 bg-red-400/10 border border-red-400/20 px-1.5 py-0.5 rounded w-fit uppercase tracking-wider">required</span>
-                        : <span className="text-[10px] text-gray-600 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded w-fit uppercase tracking-wider">optional</span>
+                        : <span className="text-[10px] text-gray-600 bg-black/5 dark:bg-white/5 border border-gray-200 dark:border-white/10 px-1.5 py-0.5 rounded w-fit uppercase tracking-wider">optional</span>
                     }
                     <span className="text-[10px] text-gray-600 font-mono pl-0.5">{p.type}</span>
                 </div>
             </td>
             <td className="py-3 pr-4 align-top">
-                <code className="text-xs text-gray-500 font-mono bg-white/[0.03] px-1.5 py-0.5 rounded">{p.default}</code>
+                <code className="text-xs text-gray-500 dark:text-gray-500 font-mono bg-black/[0.03] dark:bg-white/[0.03] px-1.5 py-0.5 rounded">{p.default}</code>
             </td>
-            <td className="py-3 align-top text-sm text-gray-400 leading-relaxed">{p.desc}</td>
+            <td className="py-3 align-top text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{p.desc}</td>
         </tr>
     );
 }
@@ -342,21 +342,21 @@ function EndpointSection({ ep }) {
     return (
         <section id={ep.id} className="scroll-mt-8 space-y-6">
             {/* Endpoint header */}
-            <div className="rounded-2xl bg-white/[0.02] border border-white/10 overflow-hidden">
+            <div className="rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 overflow-hidden">
                 <div className="px-6 py-5 border-b border-white/[0.07] bg-gradient-to-r from-white/[0.02] to-transparent">
                     <div className="flex flex-wrap items-center gap-3 mb-2">
                         <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold ${BADGE_COLORS[ep.badgeColor]}`}>
                             <Icon className="w-3.5 h-3.5" /> {ep.badge}
                         </div>
                         <MethodBadge method={ep.method} />
-                        <code className="text-sm font-mono text-white/80 break-all">{ep.path}</code>
+                        <code className="text-sm font-mono text-gray-900 dark:text-white/80 break-all">{ep.path}</code>
                     </div>
-                    <p className="text-gray-400 text-sm leading-relaxed mt-2">{ep.desc}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mt-2">{ep.desc}</p>
                 </div>
 
                 {/* Parameters table */}
                 <div className="px-6 py-5">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <span className="w-4 h-px bg-gray-700" /> Parameters
                     </h4>
                     <div className="overflow-x-auto -mx-1">
@@ -379,23 +379,23 @@ function EndpointSection({ ep }) {
                 {/* Response */}
                 <div className="px-6 py-4 border-t border-white/[0.07] bg-white/[0.01]">
                     <div className="flex items-center gap-3 flex-wrap">
-                        <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Response</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wider font-semibold">Response</span>
                         <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded font-mono">200 OK</span>
-                        <code className="text-xs text-gray-400 font-mono">{ep.response.type}</code>
+                        <code className="text-xs text-gray-600 dark:text-gray-400 font-mono">{ep.response.type}</code>
                         {ep.response.extra && <span className="text-xs text-gray-600">· {ep.response.extra}</span>}
                     </div>
                 </div>
             </div>
 
             {/* Code examples */}
-            <div className="rounded-2xl bg-white/[0.02] border border-white/10 overflow-hidden">
+            <div className="rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 overflow-hidden">
                 <div className="px-5 py-3.5 border-b border-white/[0.07] flex items-center justify-between flex-wrap gap-3">
                     <div className="flex gap-1">
                         {langs.map(l => (
                             <button key={l} onClick={() => setLang(l)}
                                 className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all ${lang === l
-                                    ? 'bg-white/10 text-white shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]'
+                                    ? 'bg-black/10 dark:bg-white/10 text-gray-900 dark:text-white shadow-sm'
+                                    : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-black/[0.04] dark:bg-white/[0.04]'
                                     }`}>
                                 {l === 'javascript' ? 'JavaScript' : l === 'curl' ? 'cURL' : 'Python'}
                             </button>
@@ -403,7 +403,7 @@ function EndpointSection({ ep }) {
                     </div>
                     <CopyBtn text={ep.examples[lang]} />
                 </div>
-                <pre className="p-5 text-sm font-mono text-gray-300 overflow-x-auto leading-7 whitespace-pre">
+                <pre className="p-5 text-sm font-mono text-gray-700 dark:text-gray-300 overflow-x-auto leading-7 whitespace-pre">
                     <code>{ep.examples[lang]}</code>
                 </pre>
             </div>
@@ -449,17 +449,17 @@ export default function Docs() {
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> API Online
                     </span>
                 </div>
-                <h1 className="text-4xl font-black text-white mb-3">Documentation</h1>
-                <p className="text-gray-400 max-w-2xl text-lg leading-relaxed">
+                <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-3">Documentation</h1>
+                <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-lg leading-relaxed">
                     A Puppeteer-powered REST API that returns pixel-perfect TradingView chart images.
                     One request → one PNG. No SDK, no complex setup.
                 </p>
                 <div className="flex flex-wrap gap-3 mt-5">
                     <Link to="/builder"
-                        className="flex items-center gap-2 text-sm px-4 py-2 bg-violet-500/10 border border-violet-500/30 text-violet-300 hover:text-white hover:bg-violet-500/20 rounded-lg transition-all font-medium">
+                        className="flex items-center gap-2 text-sm px-4 py-2 bg-violet-500/10 border border-violet-500/30 text-violet-300 hover:text-gray-900 dark:text-white hover:bg-violet-500/20 rounded-lg transition-all font-medium">
                         <Terminal className="w-4 h-4" /> Open Visual Builder
                     </Link>
-                    <code className="flex items-center gap-2 text-sm px-4 py-2 bg-white/[0.03] border border-white/10 text-gray-400 rounded-lg font-mono">
+                    <code className="flex items-center gap-2 text-sm px-4 py-2 bg-black/[0.03] dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 rounded-lg font-mono">
                         Base URL: http://localhost:3000
                     </code>
                 </div>
@@ -474,7 +474,7 @@ export default function Docs() {
                             <button key={item.id} onClick={() => scrollTo(item.id)}
                                 className={`w-full text-left flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${item.sub ? 'pl-6' : ''} ${activeSection === item.id
                                     ? 'text-violet-300 bg-violet-500/10'
-                                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]'
+                                    : 'text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-black/[0.04] dark:bg-white/[0.04]'
                                     }`}>
                                 {!item.sub && item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
                                 <span className="truncate">{item.label}</span>
@@ -483,11 +483,11 @@ export default function Docs() {
 
                         <div className="pt-4 border-t border-white/[0.06] mt-2 space-y-0.5">
                             <Link to="/pricing"
-                                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-300 hover:bg-white/[0.04] transition-all">
+                                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-700 dark:text-gray-300 hover:bg-black/[0.04] dark:bg-white/[0.04] transition-all">
                                 <Globe className="w-3.5 h-3.5" /> Pricing
                             </Link>
                             <a href="https://github.com/MrChartist/chartsnap" target="_blank" rel="noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-300 hover:bg-white/[0.04] transition-all">
+                                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-700 dark:text-gray-300 hover:bg-black/[0.04] dark:bg-white/[0.04] transition-all">
                                 <ExternalLink className="w-3.5 h-3.5" /> GitHub
                             </a>
                         </div>
@@ -500,7 +500,7 @@ export default function Docs() {
                     {/* QUICK START */}
                     <section id="quickstart" className="scroll-mt-8 space-y-5">
                         <SectionHeader icon={Zap} label="Quick Start" />
-                        <p className="text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-400">
                             Generate your first chart in under a minute. No account needed for the synchronous v1 endpoints.
                         </p>
 
@@ -510,83 +510,83 @@ export default function Docs() {
                                 { step: '2', title: 'Make the API call', desc: 'Send a GET request with your Layout ID and any optional overrides (symbol, interval, range, theme, size).' },
                                 { step: '3', title: 'Use the PNG response', desc: 'The response is a raw PNG binary. Pipe it to a file, send as an attachment, or display in a browser.' },
                             ].map(s => (
-                                <div key={s.step} className="p-5 rounded-xl bg-white/[0.03] border border-white/[0.08]">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-cyan-600 flex items-center justify-center text-white font-black text-sm mb-3">{s.step}</div>
-                                    <h3 className="font-bold text-white text-sm mb-1">{s.title}</h3>
-                                    <p className="text-xs text-gray-500 leading-relaxed">{s.desc}</p>
+                                <div key={s.step} className="p-5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.08]">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-cyan-600 flex items-center justify-center text-gray-900 dark:text-white font-black text-sm mb-3">{s.step}</div>
+                                    <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1">{s.title}</h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 leading-relaxed">{s.desc}</p>
                                 </div>
                             ))}
                         </div>
 
                         <div className="space-y-3">
-                            <p className="text-sm font-semibold text-gray-300">Minimal example — get a chart in one command:</p>
+                            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Minimal example — get a chart in one command:</p>
                             <CodeBlock lang="bash" code={`curl "http://localhost:3000/v1/tradingview/layout-chart/YOUR_LAYOUT_ID?symbol=BINANCE:BTCUSDT&interval=1D" --output chart.png`} />
                         </div>
 
                         <InfoBox icon={Info} color="violet">
-                            <strong>Getting your Layout ID:</strong> Open TradingView → set up your chart → click the <strong>Share</strong> button → <strong>Publish Chart</strong>. The ID is the alphanumeric string in the URL: <code className="bg-white/10 px-1 rounded">tradingview.com/chart/<strong>hMZXawOv</strong>/</code>
+                            <strong>Getting your Layout ID:</strong> Open TradingView → set up your chart → click the <strong>Share</strong> button → <strong>Publish Chart</strong>. The ID is the alphanumeric string in the URL: <code className="bg-black/10 dark:bg-white/10 px-1 rounded">tradingview.com/chart/<strong>hMZXawOv</strong>/</code>
                         </InfoBox>
                     </section>
 
                     {/* AUTHENTICATION */}
                     <section id="authentication" className="scroll-mt-8 space-y-5">
                         <SectionHeader icon={Key} label="Authentication" />
-                        <p className="text-gray-400">
-                            The public <code className="text-violet-300 text-sm">/v1/tradingview/*</code> chart endpoints require <strong className="text-white">no authentication</strong>. You can use them directly from any client.
+                        <p className="text-gray-600 dark:text-gray-400">
+                            The public <code className="text-violet-300 text-sm">/v1/tradingview/*</code> chart endpoints require <strong className="text-gray-900 dark:text-white">no authentication</strong>. You can use them directly from any client.
                         </p>
-                        <p className="text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-400">
                             The async job queue endpoints (<code className="text-violet-300 text-sm">/v1/renders</code> and <code className="text-violet-300 text-sm">/v1/jobs/*</code>) require an API key. Pass it as a Bearer token:
                         </p>
                         <CodeBlock lang="http" code={`Authorization: Bearer chartsnap_test_key_2026`} />
                         <div className="grid sm:grid-cols-2 gap-4">
-                            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Key Storage</p>
-                                <p className="text-sm text-gray-500">Keys are SHA-256 hashed before storage. The plain-text key is never kept in the database — only its hash.</p>
+                            <div className="p-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.08] space-y-2">
+                                <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Key Storage</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-500">Keys are SHA-256 hashed before storage. The plain-text key is never kept in the database — only its hash.</p>
                             </div>
-                            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Default Test Key</p>
+                            <div className="p-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.08] space-y-2">
+                                <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Default Test Key</p>
                                 <code className="block text-xs font-mono text-violet-300 bg-violet-500/10 px-3 py-2 rounded-lg break-all">chartsnap_test_key_2026</code>
                             </div>
                         </div>
                         <InfoBox icon={AlertCircle} color="amber">
-                            Run <code className="bg-white/10 px-1 rounded">node init-db.js</code> once to create the database and seed the default test API key before starting the server.
+                            Run <code className="bg-black/10 dark:bg-white/10 px-1 rounded">node init-db.js</code> once to create the database and seed the default test API key before starting the server.
                         </InfoBox>
                     </section>
 
                     {/* RATE LIMITING */}
                     <section id="rate-limiting" className="scroll-mt-8 space-y-5">
                         <SectionHeader icon={Activity} label="Rate Limiting" />
-                        <p className="text-gray-400">Rate limits are enforced per IP address using a sliding 60-second window. No registration required.</p>
+                        <p className="text-gray-600 dark:text-gray-400">Rate limits are enforced per IP address using a sliding 60-second window. No registration required.</p>
 
-                        <div className="overflow-x-auto rounded-xl border border-white/10">
+                        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-white/[0.07] bg-white/[0.02]">
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Route Group</th>
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Limit</th>
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Auth</th>
+                                    <tr className="border-b border-white/[0.07] bg-black/[0.02] dark:bg-white/[0.02]">
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider">Route Group</th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider">Limit</th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider">Auth</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/[0.05]">
-                                    <tr className="hover:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/tradingview/*</td><td className="px-5 py-3 text-gray-300">20 req / min</td><td className="px-5 py-3 text-gray-500">None</td></tr>
-                                    <tr className="hover:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/renders</td><td className="px-5 py-3 text-gray-300">60 req / min</td><td className="px-5 py-3 text-gray-500">Bearer token</td></tr>
-                                    <tr className="hover:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/jobs/*</td><td className="px-5 py-3 text-gray-300">60 req / min</td><td className="px-5 py-3 text-gray-500">Bearer token</td></tr>
+                                    <tr className="hover:bg-black/[0.02] dark:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/tradingview/*</td><td className="px-5 py-3 text-gray-700 dark:text-gray-300">20 req / min</td><td className="px-5 py-3 text-gray-500 dark:text-gray-500">None</td></tr>
+                                    <tr className="hover:bg-black/[0.02] dark:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/renders</td><td className="px-5 py-3 text-gray-700 dark:text-gray-300">60 req / min</td><td className="px-5 py-3 text-gray-500 dark:text-gray-500">Bearer token</td></tr>
+                                    <tr className="hover:bg-black/[0.02] dark:bg-white/[0.02]"><td className="px-5 py-3 font-mono text-violet-300 text-xs">/v1/jobs/*</td><td className="px-5 py-3 text-gray-700 dark:text-gray-300">60 req / min</td><td className="px-5 py-3 text-gray-500 dark:text-gray-500">Bearer token</td></tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] font-mono text-xs space-y-1 text-gray-400">
+                        <div className="p-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.08] font-mono text-xs space-y-1 text-gray-600 dark:text-gray-400">
                             <p className="text-gray-600 text-[10px] uppercase tracking-wider mb-2">Rate limit response headers</p>
                             <p>X-RateLimit-Limit: 20</p>
                             <p>X-RateLimit-Remaining: 17</p>
                         </div>
-                        <p className="text-sm text-gray-500">When exceeded, you receive HTTP <code className="text-amber-400">429</code> with a JSON body containing <code className="text-violet-300">retryAfter</code> (seconds until window resets).</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-500">When exceeded, you receive HTTP <code className="text-amber-400">429</code> with a JSON body containing <code className="text-violet-300">retryAfter</code> (seconds until window resets).</p>
                     </section>
 
                     {/* ENDPOINTS HEADER */}
                     <section id="endpoints" className="scroll-mt-8">
                         <SectionHeader icon={Code2} label="Endpoints" />
-                        <p className="text-gray-400 mt-2">All endpoints return binary image data directly — no JSON wrapper around the image.</p>
+                        <p className="text-gray-600 dark:text-gray-400 mt-2">All endpoints return binary image data directly — no JSON wrapper around the image.</p>
                     </section>
 
                     {/* ENDPOINT DETAILS */}
@@ -595,10 +595,10 @@ export default function Docs() {
                     {/* INTERVALS REFERENCE */}
                     <section id="intervals" className="scroll-mt-8 space-y-5">
                         <SectionHeader icon={Clock} label="Intervals Reference" />
-                        <p className="text-gray-400">All accepted values for the <code className="text-violet-300">interval</code> parameter across all endpoints.</p>
+                        <p className="text-gray-600 dark:text-gray-400">All accepted values for the <code className="text-violet-300">interval</code> parameter across all endpoints.</p>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                             {INTERVALS.map(iv => (
-                                <div key={iv.val} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.07] hover:border-violet-500/30 transition-all group">
+                                <div key={iv.val} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.07] hover:border-violet-500/30 transition-all group">
                                     <code className="text-violet-300 text-sm font-mono font-bold group-hover:text-violet-200">{iv.val}</code>
                                     <span className="text-gray-600 text-xs">{iv.label}</span>
                                 </div>
@@ -606,10 +606,10 @@ export default function Docs() {
                         </div>
 
                         <div className="mt-4">
-                            <p className="text-sm font-semibold text-gray-300 mb-3">Date Range values (<code className="text-violet-300">range</code> param — layout-chart only):</p>
+                            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Date Range values (<code className="text-violet-300">range</code> param — layout-chart only):</p>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                 {DATE_RANGES.map(dr => (
-                                    <div key={dr.val} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.07] hover:border-cyan-500/30 transition-all group">
+                                    <div key={dr.val} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.07] hover:border-cyan-500/30 transition-all group">
                                         <code className="text-cyan-300 text-sm font-mono font-bold group-hover:text-cyan-200">{dr.val}</code>
                                         <span className="text-gray-600 text-xs">{dr.label}</span>
                                     </div>
@@ -621,26 +621,26 @@ export default function Docs() {
                     {/* ERROR CODES */}
                     <section id="errors" className="scroll-mt-8 space-y-5">
                         <SectionHeader icon={AlertCircle} label="Error Codes" />
-                        <p className="text-gray-400">All errors return a JSON body: <code className="text-violet-300 text-sm">{`{ "error": true, "message": "..." }`}</code></p>
+                        <p className="text-gray-600 dark:text-gray-400">All errors return a JSON body: <code className="text-violet-300 text-sm">{`{ "error": true, "message": "..." }`}</code></p>
 
-                        <div className="overflow-x-auto rounded-xl border border-white/10">
+                        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-white/[0.07] bg-white/[0.02]">
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-20">Code</th>
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-40">Status</th>
-                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Meaning</th>
+                                    <tr className="border-b border-white/[0.07] bg-black/[0.02] dark:bg-white/[0.02]">
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider w-20">Code</th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider w-40">Status</th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wider">Meaning</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/[0.05]">
                                     {ERRORS.map(e => (
-                                        <tr key={e.code} className="hover:bg-white/[0.02]">
+                                        <tr key={e.code} className="hover:bg-black/[0.02] dark:bg-white/[0.02]">
                                             <td className="px-5 py-3">
                                                 <span className={`font-mono font-bold text-xs px-2 py-1 rounded ${e.code.startsWith('4') ? 'bg-amber-400/10 text-amber-400' : 'bg-red-400/10 text-red-400'
                                                     }`}>{e.code}</span>
                                             </td>
-                                            <td className="px-5 py-3 text-gray-300 font-medium">{e.title}</td>
-                                            <td className="px-5 py-3 text-gray-500 text-xs leading-relaxed">{e.desc}</td>
+                                            <td className="px-5 py-3 text-gray-700 dark:text-gray-300 font-medium">{e.title}</td>
+                                            <td className="px-5 py-3 text-gray-500 dark:text-gray-500 text-xs leading-relaxed">{e.desc}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -652,19 +652,19 @@ export default function Docs() {
                     <section id="async" className="scroll-mt-8 space-y-6">
                         <SectionHeader icon={BookOpen} label="Async Jobs (v2)" />
                         <InfoBox icon={Info} color="blue">
-                            The async job queue requires a Bearer API key and the worker process running separately (<code className="bg-white/10 px-1 rounded">node server/worker.js</code>). The worker processes jobs queued in SQLite.
+                            The async job queue requires a Bearer API key and the worker process running separately (<code className="bg-black/10 dark:bg-white/10 px-1 rounded">node server/worker.js</code>). The worker processes jobs queued in SQLite.
                         </InfoBox>
 
                         <div className="space-y-4">
                             {/* Step 1 */}
-                            <div className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                            <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] overflow-hidden">
                                 <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-white text-xs font-bold">1</span>
+                                    <span className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-gray-900 dark:text-white text-xs font-bold">1</span>
                                     <div>
                                         <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded mr-2 font-mono">POST</span>
-                                        <code className="text-sm text-white/80 font-mono">/v1/renders</code>
+                                        <code className="text-sm text-gray-900 dark:text-white/80 font-mono">/v1/renders</code>
                                     </div>
-                                    <span className="ml-auto text-xs text-gray-500">Enqueue a job — returns 202</span>
+                                    <span className="ml-auto text-xs text-gray-500 dark:text-gray-500">Enqueue a job — returns 202</span>
                                 </div>
                                 <CodeBlock lang="bash" code={`curl -X POST http://localhost:3000/v1/renders \\
   -H "Authorization: Bearer chartsnap_test_key_2026" \\
@@ -675,7 +675,7 @@ export default function Docs() {
     "output": { "width": 1920, "height": 1080, "format": "png" }
   }'`} />
                                 <div className="px-5 py-3.5 border-t border-white/[0.06] bg-white/[0.01]">
-                                    <p className="text-xs text-gray-500 mb-2 font-semibold uppercase tracking-wider">202 Response</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-2 font-semibold uppercase tracking-wider">202 Response</p>
                                     <CodeBlock lang="json" code={`{
   "job_id": "job_abc123def456",
   "status": "queued",
@@ -688,19 +688,19 @@ export default function Docs() {
                             </div>
 
                             {/* Step 2 */}
-                            <div className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                            <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] overflow-hidden">
                                 <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-white text-xs font-bold">2</span>
+                                    <span className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-gray-900 dark:text-white text-xs font-bold">2</span>
                                     <div>
                                         <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded mr-2 font-mono">GET</span>
-                                        <code className="text-sm text-white/80 font-mono">/v1/jobs/:id</code>
+                                        <code className="text-sm text-gray-900 dark:text-white/80 font-mono">/v1/jobs/:id</code>
                                     </div>
-                                    <span className="ml-auto text-xs text-gray-500">Poll until succeeded</span>
+                                    <span className="ml-auto text-xs text-gray-500 dark:text-gray-500">Poll until succeeded</span>
                                 </div>
                                 <CodeBlock lang="bash" code={`curl http://localhost:3000/v1/jobs/job_abc123def456 \\
   -H "Authorization: Bearer chartsnap_test_key_2026"`} />
                                 <div className="px-5 py-3.5 border-t border-white/[0.06] bg-white/[0.01]">
-                                    <p className="text-xs text-gray-500 mb-2 font-semibold uppercase tracking-wider">Status values: queued → processing → succeeded | failed</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-2 font-semibold uppercase tracking-wider">Status values: queued → processing → succeeded | failed</p>
                                     <CodeBlock lang="json" code={`{
   "job_id": "job_abc123def456",
   "status": "succeeded",
@@ -713,19 +713,19 @@ export default function Docs() {
                             </div>
 
                             {/* Step 3 */}
-                            <div className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                            <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] overflow-hidden">
                                 <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold">3</span>
+                                    <span className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-gray-900 dark:text-white text-xs font-bold">3</span>
                                     <div>
                                         <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded mr-2 font-mono">GET</span>
-                                        <code className="text-sm text-white/80 font-mono">/v1/jobs/:id/result</code>
+                                        <code className="text-sm text-gray-900 dark:text-white/80 font-mono">/v1/jobs/:id/result</code>
                                     </div>
-                                    <span className="ml-auto text-xs text-gray-500">302 redirect to PNG</span>
+                                    <span className="ml-auto text-xs text-gray-500 dark:text-gray-500">302 redirect to PNG</span>
                                 </div>
                                 <CodeBlock lang="bash" code={`curl -L http://localhost:3000/v1/jobs/job_abc123def456/result \\
   -H "Authorization: Bearer chartsnap_test_key_2026" \\
   --output chart.png`} />
-                                <p className="px-5 py-3.5 text-xs text-gray-500 border-t border-white/[0.06]">
+                                <p className="px-5 py-3.5 text-xs text-gray-500 dark:text-gray-500 border-t border-white/[0.06]">
                                     This redirects (HTTP 302) to <code className="text-violet-300">/storage/{'{job_id}'}.png</code>. The PNG is stored for 30 days then expires.
                                 </p>
                             </div>
@@ -737,9 +737,9 @@ export default function Docs() {
                                 { engine: 'lightweight_charts', desc: 'Alias for native engine — both use the same Puppeteer chart renderer.' },
                                 { engine: 'tradingview_layout', desc: 'Screenshot a saved TradingView layout by ID. Same as /v1/tradingview/layout-chart.' },
                             ].map(e => (
-                                <div key={e.engine} className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.07]">
+                                <div key={e.engine} className="p-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-white/[0.07]">
                                     <code className="text-violet-300 text-xs font-mono font-bold">{e.engine}</code>
-                                    <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{e.desc}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1.5 leading-relaxed">{e.desc}</p>
                                 </div>
                             ))}
                         </div>
@@ -753,10 +753,10 @@ export default function Docs() {
 function SectionHeader({ icon: Icon, label }) {
     return (
         <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-white/[0.04] border border-white/10">
-                <Icon className="w-4 h-4 text-gray-400" />
+            <div className="p-2 rounded-lg bg-black/[0.04] dark:bg-white/[0.04] border border-gray-200 dark:border-white/10">
+                <Icon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </div>
-            <h2 className="text-2xl font-black text-white">{label}</h2>
+            <h2 className="text-2xl font-black text-gray-900 dark:text-white">{label}</h2>
             <div className="flex-grow h-px bg-gradient-to-r from-white/10 to-transparent ml-2" />
         </div>
     );

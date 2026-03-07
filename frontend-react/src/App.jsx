@@ -20,7 +20,7 @@ export default function App() {
     const isDashboard = location.pathname.startsWith('/dashboard');
 
     return (
-        <div className={`min-h-screen bg-[#0A0D14] text-white ${!isBare ? 'flex flex-col' : ''}`}>
+        <div className={`min-h-screen bg-gray-50 text-gray-900 dark:bg-[#0A0D14] dark:text-white transition-colors duration-300 ${!isBare ? 'flex flex-col' : ''}`}>
             {/* Show Navbar on all non-bare pages (including dashboard) */}
             {!isBare && <Navbar />}
 

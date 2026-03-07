@@ -18,19 +18,19 @@ export default function NotFound() {
                     </p>
                 </div>
 
-                <h1 className="text-2xl font-bold text-white mb-3">Page not found</h1>
-                <p className="text-gray-400 mb-10">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Page not found</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-10">
                     The page you're looking for doesn't exist or was moved.
                     Head back and try again.
                 </p>
 
                 <div className="flex items-center justify-center gap-3 flex-wrap">
                     <Link to="/"
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold text-sm hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all">
+                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-gray-900 dark:text-white rounded-xl font-semibold text-sm hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all">
                         <Home className="w-4 h-4" /> Back to Home
                     </Link>
                     <Link to="/builder"
-                        className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-gray-300 hover:text-white rounded-xl font-semibold text-sm hover:bg-white/10 transition-all">
+                        className="flex items-center gap-2 px-5 py-2.5 bg-black/5 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:text-white rounded-xl font-semibold text-sm hover:bg-black/10 dark:bg-white/10 transition-all">
                         <AreaChart className="w-4 h-4" /> Try Builder
                     </Link>
                 </div>

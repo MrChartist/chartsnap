@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AreaChart, Zap, Menu, X, LayoutDashboard, LogOut, User } from 'lucide-react';
+import { AreaChart, Zap, Menu, X, LayoutDashboard, LogOut, User, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isLoggedIn, getUser, clearToken } from '../../lib/auth';
+import { useTheme } from '../ThemeProvider';
 
 const LINKS = [
     { to: '/builder', label: 'Builder' },
@@ -23,6 +24,7 @@ export default function Navbar() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const loc = useLocation();
     const navigate = useNavigate();
+    const { theme, toggleTheme } = useTheme();
 
     const loggedIn = isLoggedIn();
     const user = loggedIn ? getUser() : null;
@@ -38,7 +40,7 @@ export default function Navbar() {
     const isActive = (to) => loc.pathname === to;
 
     return (
-        <nav className="border-b border-white/10 bg-background/60 backdrop-blur-xl sticky top-0 z-50">
+        <nav className="border-b border-gray-200 dark:border-white/10 bg-white/80 dark:bg-background/60 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
@@ -56,19 +58,23 @@ export default function Navbar() {
                     <div className="hidden md:flex items-center space-x-6">
                         {LINKS.map(lk => lk.external ? (
                             <a key={lk.label} href={lk.href} target="_blank" rel="noreferrer"
-                                className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                                className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                 {lk.label}
                             </a>
                         ) : (
                             <Link key={lk.to} to={lk.to}
-                                className={`text-sm font-medium transition-colors ${isActive(lk.to) ? 'text-violet-300' : 'text-gray-400 hover:text-white'}`}>
+                                className={`text-sm font-medium transition-colors ${isActive(lk.to) ? 'text-violet-600 dark:text-violet-300' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
                                 {lk.label}
                             </Link>
                         ))}
                     </div>
 
-                    {/* Right side — auth-aware */}
+                    {/* Right side — auth-aware & theme */}
                     <div className="flex items-center gap-3">
+                        <button onClick={toggleTheme} className="p-2 rounded-lg bg-gray-200 dark:bg-white/5 hover:bg-gray-300 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors" aria-label="Toggle theme">
+                            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                        </button>
+
                         {loggedIn ? (
                             <>
                                 {/* Dashboard link — desktop */}
@@ -134,7 +140,7 @@ export default function Navbar() {
                         <button
                             id="mobile-menu-toggle"
                             onClick={() => setOpen(o => !o)}
-                            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white transition-all"
+                            className="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all"
                             aria-label="Toggle menu"
                         >
                             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -150,7 +156,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden border-t border-white/10 bg-background/95 backdrop-blur-xl overflow-hidden">
+                        className="md:hidden border-t border-gray-200 dark:border-white/10 bg-white/95 dark:bg-background/95 backdrop-blur-xl overflow-hidden">
                         <div className="px-4 py-4 space-y-1">
                             {LINKS.map(lk => lk.external ? (
                                 <a key={lk.label} href={lk.href} target="_blank" rel="noreferrer"
