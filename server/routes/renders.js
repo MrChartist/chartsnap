@@ -13,7 +13,8 @@ router.post('/', (req, res) => {
     }
 
     const jobId = 'job_' + crypto.randomBytes(12).toString('hex');
-    const tenantId = 'default';
+    const tenantId = req.tenant.id;
+    console.log(`[Renders] Attempting to queue job ${jobId} for tenant: "${tenantId}"`);
     const canonical = JSON.stringify(req.body);
     const requestHash = crypto.createHash('sha256').update(canonical).digest('hex');
     const db = dbService.getDb();

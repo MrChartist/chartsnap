@@ -26,3 +26,7 @@ storage/*
 # Logs
 *.log
 logs/
+node_modules_locked_*/
+server/data/
+.npm-cache/
+init-db.js

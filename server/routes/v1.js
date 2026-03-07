@@ -68,9 +68,9 @@ router.post('/tradingview/layout-chart/:layoutId', async (req, res) => {
 // GET /v1/tradingview/layout-chart/:layoutId?symbol=NSE:SAIL&interval=1D
 router.get('/tradingview/layout-chart/:layoutId', async (req, res) => {
     const { layoutId } = req.params;
-    const { symbol, interval = '1D', range, width = 1920, height = 1080 } = req.query;
+    const { symbol, interval = '1D', range, width = 1920, height = 1080, theme = 'dark' } = req.query;
 
-    console.log(`[layout-chart] layout=${layoutId} symbol=${symbol} interval=${interval} range=${range} ${width}x${height}`);
+    console.log(`[layout-chart] layout=${layoutId} symbol=${symbol} interval=${interval} range=${range} theme=${theme} ${width}x${height}`);
 
     try {
         const { buffer, type } = await generateLayoutChart({
@@ -78,6 +78,7 @@ router.get('/tradingview/layout-chart/:layoutId', async (req, res) => {
             symbol,
             interval,
             range,
+            theme,
             width: parseInt(width),
             height: parseInt(height),
         });
